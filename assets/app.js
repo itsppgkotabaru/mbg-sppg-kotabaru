@@ -24,7 +24,7 @@ const months = [
 ];
 
 /* =========================
-   CEK KONFIGURASI SUPABASE
+   CEK CONFIG SUPABASE
 ========================= */
 
 if (
@@ -34,7 +34,6 @@ if (
   document.getElementById("emptyState").style.display = "block";
   document.getElementById("emptyText").textContent =
     "Konfigurasi Supabase belum diisi. Silakan ikuti README.";
-
   throw new Error("Supabase config belum diisi.");
 }
 
@@ -45,7 +44,7 @@ const sb = window.supabase.createClient(
 
 
 /* =========================
-   TANGGAL WIB INDONESIA
+   TANGGAL WIB
 ========================= */
 
 function todayWIB() {
@@ -64,18 +63,6 @@ function todayWIB() {
 
 
 /* =========================
-   PARAMETER URL
-========================= */
-
-const params = new URLSearchParams(location.search);
-
-let selectedDate =
-  /^\d{4}-\d{2}-\d{2}$/.test(params.get("date") || "")
-    ? params.get("date")
-    : todayWIB();
-
-
-/* =========================
    UTILITAS TANGGAL
 ========================= */
 
@@ -83,33 +70,21 @@ function toISO(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-
 function parseISO(s) {
   const [a, b, c] = s.split("-").map(Number);
   return new Date(a, b - 1, c);
 }
-
-
-/* =========================
-   SENIN MINGGU BERJALAN
-========================= */
 
 function mondayOf(s) {
   const d = parseISO(s);
   const day = d.getDay();
 
   d.setDate(
-    d.getDate() +
-    (day === 0 ? -6 : 1 - day)
+    d.getDate() + (day === 0 ? -6 : 1 - day)
   );
 
   return d;
 }
-
-
-/* =========================
-   FORMAT TANGGAL
-========================= */
 
 function fmtDate(s) {
   const d = parseISO(s);
@@ -122,6 +97,42 @@ function fmtDate(s) {
    URL
 ========================= */
 
+const params = new URLSearchParams(location.search);
+
+const urlDate =
+  /^\d{4}-\d{2}-\d{2}$/.test(
+    params.get("date") || ""
+  )
+    ? params.get("date")
+    : null;
+
+
+/* =========================
+   TANGGAL TERPILIH
+========================= */
+
+let selectedDate = urlDate || todayWIB();
+
+
+/* =========================
+   MINGGU YANG DITAMPILKAN
+========================= */
+
+/*
+   Kalau tidak ada ?date=...
+   otomatis gunakan minggu sekarang.
+
+   Kalau ada ?date=...
+   gunakan minggu dari tanggal tersebut.
+*/
+
+let weekStart = mondayOf(selectedDate);
+
+
+/* =========================
+   SET URL
+========================= */
+
 function setURL() {
   history.replaceState(
     null,
@@ -132,7 +143,7 @@ function setURL() {
 
 
 /* =========================
-   ESCAPE TEXT
+   ESCAPE HTML
 ========================= */
 
 function esc(v) {
@@ -150,40 +161,26 @@ function esc(v) {
 
 
 /* =========================
-   MENU MINGGU INI
+   LOAD MENU MINGGU
 ========================= */
 
 async function loadWeek() {
 
-  /*
-    Selalu gunakan minggu dari tanggal SEKARANG
-    berdasarkan WIB.
-  */
-
-  const realToday = todayWIB();
-
-  const start = mondayOf(realToday);
-
   const dates = [];
-
-  /*
-    Senin sampai Jumat
-  */
 
   for (let i = 0; i < 5; i++) {
 
-    const d = new Date(start);
+    const d = new Date(weekStart);
 
-    d.setDate(start.getDate() + i);
+    d.setDate(
+      weekStart.getDate() + i
+    );
 
     dates.push(toISO(d));
   }
 
 
-  /*
-    Ambil data menu dari Supabase.
-    Data ini tidak wajib ada untuk setiap hari.
-  */
+  /* Ambil data yang tersedia dari Supabase */
 
   const {
     data,
@@ -198,19 +195,14 @@ async function loadWeek() {
   }
 
 
-  /*
-    Buat tombol Senin-Jumat.
-  */
+  /* Buat tombol Senin-Jumat */
 
-  document.getElementById("weeklyButtons").innerHTML =
-    dates.map(iso => {
+  document.getElementById(
+    "weeklyButtons"
+  ).innerHTML = dates
+    .map(iso => {
 
       const d = parseISO(iso);
-
-      /*
-        Hari yang sedang dipilih tetap diberi
-        warna active.
-      */
 
       const active =
         iso === selectedDate
@@ -227,13 +219,11 @@ async function loadWeek() {
           <span>${d.getDate()}</span>
         </button>
       `;
+    })
+    .join("");
 
-    }).join("");
 
-
-  /*
-    Klik hari
-  */
+  /* Klik tanggal */
 
   document
     .querySelectorAll(".day-button")
@@ -246,7 +236,17 @@ async function loadWeek() {
 
         setURL();
 
-        render();
+        loadMenu();
+
+        /* Update tombol aktif */
+
+        document
+          .querySelectorAll(".day-button")
+          .forEach(btn =>
+            btn.classList.remove("active")
+          );
+
+        button.classList.add("active");
       };
 
     });
@@ -254,26 +254,31 @@ async function loadWeek() {
 
 
 /* =========================
-   TAMPILKAN MENU
+   LOAD MENU HARIAN
 ========================= */
 
 async function loadMenu() {
 
   const d = parseISO(selectedDate);
 
-  document.getElementById("dayName").textContent =
+
+  document.getElementById(
+    "dayName"
+  ).textContent =
     labels[d.getDay()];
 
-  document.getElementById("displayDate").textContent =
+
+  document.getElementById(
+    "displayDate"
+  ).textContent =
     fmtDate(selectedDate);
 
-  document.getElementById("photoCaption").textContent =
+
+  document.getElementById(
+    "photoCaption"
+  ).textContent =
     `MENU ${labels[d.getDay()].toUpperCase()}`;
 
-
-  /*
-    Ambil menu berdasarkan tanggal.
-  */
 
   const {
     data: m,
@@ -297,15 +302,15 @@ async function loadMenu() {
   }
 
 
-  /*
-    FOTO MENU
-  */
+  /* Foto */
 
   const img =
     document.getElementById("menuPhoto");
 
   const ph =
-    document.getElementById("photoPlaceholder");
+    document.getElementById(
+      "photoPlaceholder"
+    );
 
 
   if (m?.photo_url) {
@@ -327,9 +332,7 @@ async function loadMenu() {
   }
 
 
-  /*
-    Jika menu belum tersedia
-  */
+  /* Belum ada menu */
 
   if (!m) {
 
@@ -341,29 +344,31 @@ async function loadMenu() {
   }
 
 
-  /*
-    Tampilkan konten menu
-  */
+  /* Tampilkan menu */
 
-  document.getElementById("emptyState").style.display =
-    "none";
+  document.getElementById(
+    "emptyState"
+  ).style.display = "none";
 
-  document.getElementById("menuContent").style.display =
-    "block";
+  document.getElementById(
+    "menuContent"
+  ).style.display = "block";
 
 
-  document.getElementById("menuTitle").textContent =
+  document.getElementById(
+    "menuTitle"
+  ).textContent =
     m.menu_title ||
     "Paket Makan Bergizi Gratis";
 
 
-  document.getElementById("menuDescription").textContent =
+  document.getElementById(
+    "menuDescription"
+  ).textContent =
     m.menu_description || "";
 
 
-  /*
-    ISI OMPRANG
-  */
+  /* Isi ompreng */
 
   [
     "carbohydrate",
@@ -373,79 +378,85 @@ async function loadMenu() {
     "fruit"
   ].forEach(key => {
 
-    const element =
+    const el =
       document.getElementById(key);
 
-    if (element) {
-      element.textContent =
+    if (el) {
+      el.textContent =
         m[key] || "";
     }
 
   });
 
 
-  /*
-    NILAI GIZI
-  */
+  /* Nutrisi */
 
   const rows = [
+
     [
       "Energi",
       "energy_small",
       "energy_large"
     ],
+
     [
       "Protein",
       "protein_small",
       "protein_large"
     ],
+
     [
       "Lemak",
       "fat_small",
       "fat_large"
     ],
+
     [
       "Karbohidrat",
       "carb_small",
       "carb_large"
     ],
+
     [
       "Serat",
       "fiber_small",
       "fiber_large"
     ]
+
   ];
 
 
-  document.getElementById("nutritionRows").innerHTML =
-    rows.map(row => {
-
-      return `
-        <tr>
-          <td>${esc(row[0])}</td>
-          <td>${esc(m[row[1]])}</td>
-          <td>${esc(m[row[2]])}</td>
-        </tr>
-      `;
-
-    }).join("");
+  document.getElementById(
+    "nutritionRows"
+  ).innerHTML = rows
+    .map(row => `
+      <tr>
+        <td>${esc(row[0])}</td>
+        <td>${esc(m[row[1]])}</td>
+        <td>${esc(m[row[2]])}</td>
+      </tr>
+    `)
+    .join("");
 }
 
 
 /* =========================
-   MENU BELUM TERSEDIA
+   EMPTY STATE
 ========================= */
 
 function showEmpty(text) {
 
-  document.getElementById("menuContent").style.display =
-    "none";
+  document.getElementById(
+    "menuContent"
+  ).style.display = "none";
 
-  document.getElementById("emptyState").style.display =
-    "block";
+  document.getElementById(
+    "emptyState"
+  ).style.display = "block";
 
-  document.getElementById("emptyText").textContent =
-    text;
+  document.getElementById(
+    "emptyText"
+  ).textContent = text;
 }
 
 
@@ -465,15 +476,18 @@ async function render() {
    MINGGU SEBELUMNYA
 ========================= */
 
-document.getElementById("prevWeek").onclick = () => {
+document.getElementById(
+  "prevWeek"
+).onclick = () => {
 
-  const d = mondayOf(selectedDate);
-
-  d.setDate(
-    d.getDate() - 7
+  weekStart.setDate(
+    weekStart.getDate() - 7
   );
 
-  selectedDate = toISO(d);
+  /* Pilih hari Senin */
+
+  selectedDate =
+    toISO(weekStart);
 
   setURL();
 
@@ -485,15 +499,18 @@ document.getElementById("prevWeek").onclick = () => {
    MINGGU BERIKUTNYA
 ========================= */
 
-document.getElementById("nextWeek").onclick = () => {
+document.getElementById(
+  "nextWeek"
+).onclick = () => {
 
-  const d = mondayOf(selectedDate);
-
-  d.setDate(
-    d.getDate() + 7
+  weekStart.setDate(
+    weekStart.getDate() + 7
   );
 
-  selectedDate = toISO(d);
+  /* Pilih hari Senin */
+
+  selectedDate =
+    toISO(weekStart);
 
   setURL();
 
@@ -502,7 +519,7 @@ document.getElementById("nextWeek").onclick = () => {
 
 
 /* =========================
-   JALANKAN
+   MULAI
 ========================= */
 
 render();
