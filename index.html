@@ -1,116 +1,791 @@
-<main>
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#163f91">
 
-<section class="menu-card">
-  <div class="date-line">
-    <span id="dayName"></span>
-    <b id="displayDate"></b>
-  </div>
+  <title>MBG • Menu Hari Ini</title>
 
-  <div class="photo-wrap">
-    <img id="menuPhoto" alt="" style="display:none">
-    <div id="photoPlaceholder" class="photo-placeholder">
-      📷<br>
-      <span>Foto menu belum tersedia</span>
-    </div>
-    <div class="photo-caption" id="photoCaption">MENU</div>
-  </div>
+  <style>
+    :root{
+      --blue:#163f91;
+      --blue2:#0f2f70;
+      --gold:#e5b84b;
+      --ink:#17243b;
+      --muted:#6b7890;
+      --bg:#f4f7fc;
+      --line:#dce5f5;
+    }
 
-  <div id="menuContent" style="display:none">
+    *{
+      box-sizing:border-box;
+    }
 
-    <h2 id="menuTitle"></h2>
-    <p class="lead" id="menuDescription"></p>
+    html{
+      scroll-behavior:smooth;
+    }
 
-    <div class="warning">
-      <h3>⚠️ PERHATIAN</h3>
-      <ol>
-        <li>Makanan sebaiknya segera dikonsumsi setelah diterima dan jangan dibawa pulang.</li>
-        <li>Periksa kondisi makanan sebelum dikonsumsi dan segera laporkan apabila terdapat makanan yang tidak sesuai.</li>
-        <li>Ompreng dikembalikan kepada petugas.</li>
-      </ol>
-    </div>
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:Inter,Segoe UI,Arial,sans-serif;
+    }
 
-    <div class="section-title">ISI OMPRANG HARI INI</div>
+    .page{
+      min-height:100vh;
+    }
 
-    <div class="food-grid">
-      <div>
-        <small>Karbohidrat / Nasi</small>
-        <strong id="carbohydrate"></strong>
-      </div>
+    /* =========================
+       HEADER
+    ========================= */
 
-      <div>
-        <small>Protein Hewani</small>
-        <strong id="animal_protein"></strong>
-      </div>
+    .site-header{
+      background:linear-gradient(135deg,var(--blue2),var(--blue));
+      color:#fff;
+      padding:25px max(20px,calc((100% - 1100px)/2));
+      display:flex;
+      align-items:center;
+      gap:15px;
+    }
 
-      <div>
-        <small>Lauk Nabati</small>
-        <strong id="plant_protein"></strong>
-      </div>
+    .brand-mark{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--gold);
+      color:var(--blue2);
+      font-size:26px;
+      font-weight:900;
+      flex:0 0 50px;
+    }
 
-      <div>
-        <small>Sayur</small>
-        <strong id="vegetable"></strong>
-      </div>
+    .eyebrow{
+      font-size:12px;
+      letter-spacing:1.8px;
+      font-weight:800;
+      opacity:.9;
+    }
 
-      <div>
-        <small>Buah</small>
-        <strong id="fruit"></strong>
-      </div>
-    </div>
+    .site-header h1{
+      font-size:22px;
+      margin:4px 0;
+    }
 
-    <div class="section-title">INFORMASI NILAI GIZI</div>
+    .site-header p{
+      margin:0;
+      opacity:.85;
+    }
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Komponen</th>
-            <th>Porsi Kecil</th>
-            <th>Porsi Besar</th>
-          </tr>
-        </thead>
-        <tbody id="nutritionRows"></tbody>
-      </table>
-    </div>
+    /* =========================
+       MAIN
+    ========================= */
 
-  </div>
+    main{
+      width:100%;
+      padding-top:1px;
+    }
 
-  <div id="emptyState" class="empty-state" style="display:none">
-    <div>🍽️</div>
-    <h2>Menu belum tersedia</h2>
-    <p id="emptyText"></p>
-  </div>
+    /* =========================
+       MENU CARD
+    ========================= */
 
-</section>
+    .menu-card{
+      width:min(100% - 30px,1000px);
+      margin:22px auto;
+      background:#fff;
+      border-radius:22px;
+      padding:20px;
+      box-shadow:0 14px 45px rgba(22,63,145,.09);
+    }
 
+    .date-line{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      color:var(--blue);
+      margin-bottom:15px;
+    }
 
-<!-- MENU MINGGU INI DIPINDAH KE BAWAH -->
+    .date-line span{
+      font-size:22px;
+      font-weight:900;
+    }
 
-<section class="weekly-menu">
+    .date-line b{
+      font-size:15px;
+    }
 
-  <div class="weekly-head">
+    /* =========================
+       FOTO MENU
+    ========================= */
+
+    .photo-wrap{
+      position:relative;
+      overflow:hidden;
+      border-radius:18px;
+      background:#eaf0fa;
+    }
+
+    .photo-wrap img{
+      width:100%;
+      display:block;
+      max-height:520px;
+      object-fit:cover;
+    }
+
+    .photo-placeholder{
+      min-height:280px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      font-size:55px;
+      color:#91a0b7;
+      padding:30px;
+    }
+
+    .photo-placeholder span{
+      font-size:14px;
+    }
+
+    .photo-caption{
+      position:absolute;
+      left:15px;
+      bottom:15px;
+      background:rgba(22,63,145,.92);
+      color:#fff;
+      border-radius:10px;
+      padding:9px 12px;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    /* =========================
+       ISI MENU
+    ========================= */
+
+    .menu-card h2{
+      color:var(--blue);
+      margin:20px 0 7px;
+    }
+
+    .lead{
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    /* =========================
+       PERHATIAN
+    ========================= */
+
+    .warning{
+      background:#fff8e6;
+      border:1px solid #f1d78a;
+      border-radius:15px;
+      padding:15px 18px;
+      margin:20px 0;
+    }
+
+    .warning h3{
+      margin:0 0 8px;
+      color:#7b5b00;
+    }
+
+    .warning ol{
+      margin:0;
+      padding-left:22px;
+      line-height:1.7;
+    }
+
+    /* =========================
+       JUDUL SECTION
+    ========================= */
+
+    .section-title{
+      font-weight:900;
+      color:var(--blue);
+      font-size:16px;
+      margin:25px 0 12px;
+    }
+
+    /* =========================
+       ISI OMPRANG
+    ========================= */
+
+    .food-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+    }
+
+    .food-grid > div{
+      border:1px solid var(--line);
+      border-radius:13px;
+      padding:13px;
+      min-height:95px;
+      background:#fff;
+    }
+
+    .food-grid small{
+      display:block;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .food-grid strong{
+      display:block;
+      color:var(--ink);
+    }
+
+    /* =========================
+       TABEL GIZI
+    ========================= */
+
+    .table-wrap{
+      overflow:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:500px;
+    }
+
+    th,
+    td{
+      padding:12px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+    }
+
+    th{
+      background:#edf3fc;
+      color:var(--blue);
+    }
+
+    /* =========================
+       MENU MINGGU INI
+       ADA DI PALING BAWAH
+    ========================= */
+
+    .weekly-menu{
+      width:min(100% - 30px,1000px);
+      margin:30px auto 22px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:18px;
+    }
+
+    .weekly-head{
+      display:flex;
+      justify-content:space-between;
+      gap:15px;
+      align-items:flex-start;
+    }
+
+    .weekly-title{
+      font-size:19px;
+      font-weight:900;
+      text-align:left;
+      color:var(--blue);
+    }
+
+    .weekly-subtitle{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    /* =========================
+       NAVIGASI MINGGU
+    ========================= */
+
+    .week-nav{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .week-nav button{
+      border:0;
+      font-family:inherit;
+      font-size:12px;
+      color:var(--blue);
+      background:#eef3fb;
+      padding:8px 10px;
+      border-radius:9px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .week-nav button:hover{
+      background:#dfe8f7;
+    }
+
+    /* =========================
+       5 KOTAK HARI
+    ========================= */
+
+    .weekly-buttons{
+      display:flex;
+      gap:12px;
+      overflow-x:auto;
+      padding:17px 2px 3px;
+      scrollbar-width:thin;
+    }
+
+    .day-button{
+      width:120px;
+      height:120px;
+      min-width:120px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff;
+      color:var(--blue);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      box-shadow:0 6px 15px rgba(22,63,145,.06);
+      cursor:pointer;
+      font-family:inherit;
+      transition:.15s ease;
+    }
+
+    .day-button:hover{
+      border-color:var(--blue);
+      transform:translateY(-2px);
+    }
+
+    .day-button strong{
+      font-size:15px;
+    }
+
+    .day-button span{
+      font-size:38px;
+      font-weight:900;
+      margin-top:5px;
+    }
+
+    .day-button.active{
+      background:var(--blue);
+      color:#fff;
+      border-color:var(--blue);
+    }
+
+    /* =========================
+       MENU BELUM TERSEDIA
+    ========================= */
+
+    .empty-state{
+      text-align:center;
+      padding:55px 20px;
+      color:var(--muted);
+    }
+
+    .empty-state > div{
+      font-size:55px;
+    }
+
+    .empty-state h2{
+      color:var(--blue);
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer{
+      width:min(100% - 30px,1000px);
+      margin:30px auto;
+      padding:20px 0;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-size:13px;
+      border-top:1px solid var(--line);
+    }
+
+    footer strong{
+      color:var(--blue);
+    }
+
+    /* =========================
+       HP
+    ========================= */
+
+    @media(max-width:700px){
+
+      .site-header{
+        padding:20px;
+      }
+
+      .site-header h1{
+        font-size:18px;
+      }
+
+      .site-header p{
+        font-size:13px;
+      }
+
+      .weekly-head{
+        display:block;
+      }
+
+      .week-nav{
+        margin-top:12px;
+      }
+
+      .day-button{
+        width:105px;
+        min-width:105px;
+        height:105px;
+      }
+
+      .day-button span{
+        font-size:32px;
+      }
+
+      .food-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .date-line{
+        display:block;
+      }
+
+      .date-line b{
+        display:block;
+        margin-top:5px;
+      }
+
+      .menu-card{
+        padding:15px;
+      }
+
+      .photo-placeholder{
+        min-height:220px;
+      }
+
+      footer{
+        display:block;
+        line-height:1.7;
+      }
+
+      footer span{
+        display:block;
+      }
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/config.js"></script>
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- =========================
+       HEADER
+  ========================== -->
+
+  <header class="site-header">
+
+    <div class="brand-mark">✺</div>
 
     <div>
-      <div class="weekly-title">📅 MENU MINGGU INI</div>
-      <div class="weekly-subtitle">
-        Pilih hari untuk melihat menu
+      <div class="eyebrow">
+        MAKAN BERGIZI GRATIS
       </div>
+
+      <h1>
+        SPPG POLRES BREBES KOTABARU
+      </h1>
+
+      <p>
+        Yayasan Kemala Bhayangkari
+      </p>
     </div>
 
-    <div class="week-nav">
-      <button id="prevWeek" type="button">
-        ‹ Minggu sebelumnya
-      </button>
+  </header>
 
-      <button id="nextWeek" type="button">
-        Minggu berikutnya ›
-      </button>
-    </div>
 
-  </div>
+  <!-- =========================
+       MAIN
+  ========================== -->
 
-  <div class="weekly-buttons" id="weeklyButtons"></div>
+  <main>
 
-</section>
+    <!-- =======================
+         MENU HARI INI
+    ======================== -->
 
-</main>
+    <section class="menu-card">
+
+      <div class="date-line">
+        <span id="dayName"></span>
+        <b id="displayDate"></b>
+      </div>
+
+
+      <!-- FOTO -->
+
+      <div class="photo-wrap">
+
+        <img
+          id="menuPhoto"
+          alt=""
+          style="display:none"
+        >
+
+        <div
+          id="photoPlaceholder"
+          class="photo-placeholder"
+        >
+          📷
+          <br>
+          <span>Foto menu belum tersedia</span>
+        </div>
+
+        <div
+          class="photo-caption"
+          id="photoCaption"
+        >
+          MENU
+        </div>
+
+      </div>
+
+
+      <!-- KONTEN MENU -->
+
+      <div
+        id="menuContent"
+        style="display:none"
+      >
+
+        <h2 id="menuTitle"></h2>
+
+        <p
+          class="lead"
+          id="menuDescription"
+        ></p>
+
+
+        <!-- PERHATIAN -->
+
+        <div class="warning">
+
+          <h3>
+            ⚠️ PERHATIAN
+          </h3>
+
+          <ol>
+
+            <li>
+              Makanan sebaiknya segera dikonsumsi setelah diterima dan jangan dibawa pulang.
+            </li>
+
+            <li>
+              Periksa kondisi makanan sebelum dikonsumsi dan segera laporkan apabila terdapat makanan yang tidak sesuai.
+            </li>
+
+            <li>
+              Ompreng dikembalikan kepada petugas.
+            </li>
+
+          </ol>
+
+        </div>
+
+
+        <!-- ISI OMPRANG -->
+
+        <div class="section-title">
+          ISI OMPRANG HARI INI
+        </div>
+
+        <div class="food-grid">
+
+          <div>
+            <small>
+              Karbohidrat / Nasi
+            </small>
+            <strong id="carbohydrate"></strong>
+          </div>
+
+          <div>
+            <small>
+              Protein Hewani
+            </small>
+            <strong id="animal_protein"></strong>
+          </div>
+
+          <div>
+            <small>
+              Lauk Nabati
+            </small>
+            <strong id="plant_protein"></strong>
+          </div>
+
+          <div>
+            <small>
+              Sayur
+            </small>
+            <strong id="vegetable"></strong>
+          </div>
+
+          <div>
+            <small>
+              Buah
+            </small>
+            <strong id="fruit"></strong>
+          </div>
+
+        </div>
+
+
+        <!-- NILAI GIZI -->
+
+        <div class="section-title">
+          INFORMASI NILAI GIZI
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Komponen</th>
+                <th>Porsi Kecil</th>
+                <th>Porsi Besar</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="nutritionRows"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+
+      <!-- MENU KOSONG -->
+
+      <div
+        id="emptyState"
+        class="empty-state"
+        style="display:none"
+      >
+
+        <div>
+          🍽️
+        </div>
+
+        <h2>
+          Menu belum tersedia
+        </h2>
+
+        <p id="emptyText"></p>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================
+         MENU MINGGU INI
+         PALING BAWAH
+    ======================== -->
+
+    <section class="weekly-menu">
+
+      <div class="weekly-head">
+
+        <div>
+
+          <div class="weekly-title">
+            📅 MENU MINGGU INI
+          </div>
+
+          <div class="weekly-subtitle">
+            Pilih hari untuk melihat menu
+          </div>
+
+        </div>
+
+
+        <!-- NAVIGASI MINGGU -->
+
+        <div class="week-nav">
+
+          <button
+            id="prevWeek"
+            type="button"
+          >
+            ‹ Minggu sebelumnya
+          </button>
+
+          <button
+            id="nextWeek"
+            type="button"
+          >
+            Minggu berikutnya ›
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- 5 HARI -->
+
+      <div
+        class="weekly-buttons"
+        id="weeklyButtons"
+      ></div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer>
+
+    <strong>
+      SPPG POLRES BREBES KOTABARU
+    </strong>
+
+    <span>
+      Yayasan Kemala Bhayangkari
+    </span>
+
+  </footer>
+
+</div>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================== -->
+
+<script src="assets/app.js"></script>
+
+</body>
+</html>
