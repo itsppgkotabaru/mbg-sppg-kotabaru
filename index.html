@@ -1,770 +1,1282 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#163f91">
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#163f91"
+  >
 
   <title>MBG • Menu Hari Ini</title>
 
   <style>
-    :root{
-      --blue:#163f91;
-      --blue2:#0f2f70;
-      --gold:#e5b84b;
-      --ink:#17243b;
-      --muted:#6b7890;
-      --bg:#f4f7fc;
-      --line:#dce5f5;
+
+    * {
+      box-sizing: border-box;
     }
 
-    *{
-      box-sizing:border-box;
+    html {
+      scroll-behavior: smooth;
     }
 
-    html{
-      scroll-behavior:smooth;
+    body {
+      margin: 0;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      background:
+        #f4f7fb;
+
+      color:
+        #172033;
+
+      line-height:
+        1.6;
     }
 
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font-family:Inter,Segoe UI,Arial,sans-serif;
-    }
-
-    .page{
-      min-height:100vh;
-    }
 
     /* =========================
        HEADER
     ========================= */
 
-    .site-header{
-      background:linear-gradient(135deg,var(--blue2),var(--blue));
-      color:#fff;
-      padding:25px max(20px,calc((100% - 1100px)/2));
-      display:flex;
-      align-items:center;
-      gap:15px;
+    header {
+      background:
+        linear-gradient(
+          135deg,
+          #163f91,
+          #2056b3
+        );
+
+      color: white;
+
+      padding:
+        24px 20px;
+
+      box-shadow:
+        0 4px 14px
+        rgba(0,0,0,.12);
     }
 
-    .brand-mark{
-      width:50px;
-      height:50px;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
-      background:var(--gold);
-      color:var(--blue2);
-      font-size:26px;
-      font-weight:900;
-      flex:0 0 50px;
+
+    .header-inner {
+      max-width:
+        1100px;
+
+      margin:
+        0 auto;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        16px;
     }
 
-    .eyebrow{
-      font-size:12px;
-      letter-spacing:1.8px;
-      font-weight:800;
-      opacity:.9;
+
+    .logo {
+      width:
+        58px;
+
+      height:
+        58px;
+
+      border-radius:
+        50%;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      background:
+        rgba(255,255,255,.16);
+
+      border:
+        2px solid
+        rgba(255,255,255,.5);
+
+      font-size:
+        28px;
+
+      flex-shrink:
+        0;
     }
 
-    .site-header h1{
-      font-size:22px;
-      margin:4px 0;
+
+    .header-text h1 {
+      margin:
+        0;
+
+      font-size:
+        21px;
+
+      font-weight:
+        800;
+
+      letter-spacing:
+        .3px;
     }
 
-    .site-header p{
-      margin:0;
-      opacity:.85;
+
+    .header-text h2 {
+      margin:
+        3px 0 0;
+
+      font-size:
+        15px;
+
+      font-weight:
+        700;
+
+      opacity:
+        .96;
     }
+
+
+    .header-text p {
+      margin:
+        2px 0 0;
+
+      font-size:
+        13px;
+
+      opacity:
+        .82;
+    }
+
 
     /* =========================
        MAIN
     ========================= */
 
-    main{
-      width:100%;
-      padding-top:1px;
+    main {
+      max-width:
+        1100px;
+
+      margin:
+        28px auto 50px;
+
+      padding:
+        0 16px;
     }
+
 
     /* =========================
        MENU CARD
     ========================= */
 
-    .menu-card{
-      width:min(100% - 30px,1000px);
-      margin:22px auto;
-      background:#fff;
-      border-radius:22px;
-      padding:20px;
-      box-shadow:0 14px 45px rgba(22,63,145,.09);
+    .menu-card {
+      background:
+        white;
+
+      border-radius:
+        18px;
+
+      overflow:
+        hidden;
+
+      box-shadow:
+        0 8px 30px
+        rgba(20,45,90,.10);
+
+      border:
+        1px solid
+        #e5eaf2;
     }
 
-    .date-line{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-      color:var(--blue);
-      margin-bottom:15px;
+
+    .menu-photo-wrap {
+      background:
+        #e9eef7;
+
+      position:
+        relative;
     }
 
-    .date-line span{
-      font-size:22px;
-      font-weight:900;
+
+    #menuPhoto {
+      width:
+        100%;
+
+      max-height:
+        430px;
+
+      object-fit:
+        cover;
+
+      display:
+        none;
     }
 
-    .date-line b{
-      font-size:15px;
+
+    #photoPlaceholder {
+      min-height:
+        260px;
+
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      color:
+        #7a8496;
+
+      font-size:
+        15px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #eef3f9,
+          #e3eaf4
+        );
     }
 
-    /* =========================
-       FOTO MENU
-    ========================= */
 
-    .photo-wrap{
-      position:relative;
-      overflow:hidden;
-      border-radius:18px;
-      background:#eaf0fa;
+    .photo-caption {
+      padding:
+        11px 18px;
+
+      font-size:
+        12px;
+
+      font-weight:
+        800;
+
+      letter-spacing:
+        1px;
+
+      color:
+        #64748b;
+
+      background:
+        white;
     }
 
-    .photo-wrap img{
-      width:100%;
-      display:block;
-      max-height:520px;
-      object-fit:cover;
+
+    .menu-content {
+      padding:
+        24px;
     }
 
-    .photo-placeholder{
-      min-height:280px;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      font-size:55px;
-      color:#91a0b7;
-      padding:30px;
+
+    .day-name {
+      margin:
+        0;
+
+      color:
+        #163f91;
+
+      font-size:
+        28px;
+
+      font-weight:
+        800;
     }
 
-    .photo-placeholder span{
-      font-size:14px;
+
+    .display-date {
+      margin:
+        0 0 18px;
+
+      color:
+        #657184;
+
+      font-size:
+        15px;
     }
 
-    .photo-caption{
-      position:absolute;
-      left:15px;
-      bottom:15px;
-      background:rgba(22,63,145,.92);
-      color:#fff;
-      border-radius:10px;
-      padding:9px 12px;
-      font-size:12px;
-      font-weight:900;
+
+    .menu-title {
+      margin:
+        0 0 7px;
+
+      font-size:
+        23px;
+
+      font-weight:
+        800;
     }
 
-    /* =========================
-       ISI MENU
-    ========================= */
 
-    .menu-card h2{
-      color:var(--blue);
-      margin:20px 0 7px;
+    .menu-description {
+      margin:
+        0 0 24px;
+
+      color:
+        #5e6878;
     }
 
-    .lead{
-      color:var(--muted);
-      line-height:1.6;
-    }
-
-    /* =========================
-       PERHATIAN
-    ========================= */
-
-    .warning{
-      background:#fff8e6;
-      border:1px solid #f1d78a;
-      border-radius:15px;
-      padding:15px 18px;
-      margin:20px 0;
-    }
-
-    .warning h3{
-      margin:0 0 8px;
-      color:#7b5b00;
-    }
-
-    .warning ol{
-      margin:0;
-      padding-left:22px;
-      line-height:1.7;
-    }
-
-    /* =========================
-       JUDUL SECTION
-    ========================= */
-
-    .section-title{
-      font-weight:900;
-      color:var(--blue);
-      font-size:16px;
-      margin:25px 0 12px;
-    }
 
     /* =========================
        ISI OMPRANG
     ========================= */
 
-    .food-grid{
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:10px;
+    .sub-title {
+      margin:
+        25px 0 14px;
+
+      font-size:
+        18px;
+
+      font-weight:
+        800;
+
+      color:
+        #163f91;
     }
 
-    .food-grid > div{
-      border:1px solid var(--line);
-      border-radius:13px;
-      padding:13px;
-      min-height:95px;
-      background:#fff;
+
+    .food-grid {
+      display:
+        grid;
+
+      grid-template-columns:
+        repeat(2, 1fr);
+
+      gap:
+        12px;
     }
 
-    .food-grid small{
-      display:block;
-      color:var(--muted);
-      margin-bottom:8px;
+
+    .food-item {
+      border:
+        1px solid
+        #e1e7ef;
+
+      border-radius:
+        12px;
+
+      padding:
+        15px;
+
+      background:
+        #fafcff;
     }
 
-    .food-grid strong{
-      display:block;
-      color:var(--ink);
+
+    .food-label {
+      font-size:
+        12px;
+
+      color:
+        #738096;
+
+      font-weight:
+        700;
+
+      margin-bottom:
+        4px;
     }
+
+
+    .food-value {
+      font-size:
+        16px;
+
+      font-weight:
+        700;
+
+      color:
+        #202b3d;
+    }
+
 
     /* =========================
-       TABEL GIZI
+       PERINGATAN
     ========================= */
 
-    .table-wrap{
-      overflow:auto;
+    .warning {
+      margin-top:
+        24px;
+
+      padding:
+        18px;
+
+      border-radius:
+        13px;
+
+      background:
+        #fff8e6;
+
+      border:
+        1px solid
+        #f3df9b;
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      min-width:500px;
+
+    .warning-title {
+      font-weight:
+        800;
+
+      margin-bottom:
+        9px;
+
+      color:
+        #765900;
     }
 
-    th,
-    td{
-      padding:12px;
-      border-bottom:1px solid var(--line);
-      text-align:left;
+
+    .warning ol {
+      margin:
+        0;
+
+      padding-left:
+        20px;
+
+      color:
+        #5e512c;
     }
 
-    th{
-      background:#edf3fc;
-      color:var(--blue);
+
+    .warning li {
+      margin-bottom:
+        6px;
     }
+
+
+    .warning li:last-child {
+      margin-bottom:
+        0;
+    }
+
+
+    /* =========================
+       NUTRISI
+    ========================= */
+
+    .nutrition-wrap {
+      margin-top:
+        25px;
+
+      overflow-x:
+        auto;
+    }
+
+
+    .nutrition-table {
+      width:
+        100%;
+
+      border-collapse:
+        collapse;
+
+      min-width:
+        560px;
+    }
+
+
+    .nutrition-table th,
+    .nutrition-table td {
+      padding:
+        12px 14px;
+
+      border:
+        1px solid
+        #e1e6ee;
+
+      text-align:
+        left;
+    }
+
+
+    .nutrition-table th {
+      background:
+        #163f91;
+
+      color:
+        white;
+
+      font-size:
+        13px;
+    }
+
+
+    .nutrition-table td {
+      background:
+        white;
+
+      font-size:
+        14px;
+    }
+
+
+    .nutrition-table td:first-child {
+      font-weight:
+        700;
+    }
+
+
+    /* =========================
+       EMPTY STATE
+    ========================= */
+
+    #emptyState {
+      display:
+        none;
+
+      margin:
+        20px 0;
+
+      padding:
+        20px;
+
+      border-radius:
+        12px;
+
+      background:
+        #fff3f3;
+
+      border:
+        1px solid
+        #efcaca;
+
+      color:
+        #8c3030;
+
+      font-weight:
+        600;
+    }
+
 
     /* =========================
        MENU MINGGU INI
-       ADA DI PALING BAWAH
     ========================= */
 
-    .weekly-menu{
-      width:min(100% - 30px,1000px);
-      margin:30px auto 22px;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:18px;
+    .weekly-menu {
+      margin-top:
+        28px;
+
+      padding:
+        20px;
+
+      background:
+        white;
+
+      border:
+        1px solid
+        #e5eaf2;
+
+      border-radius:
+        18px;
+
+      box-shadow:
+        0 8px 25px
+        rgba(20,45,90,.07);
     }
 
-    .weekly-head{
-      display:flex;
-      justify-content:space-between;
-      gap:15px;
-      align-items:flex-start;
+
+    .section-title {
+      margin:
+        0 0 15px;
+
+      color:
+        #163f91;
+
+      font-size:
+        18px;
+
+      font-weight:
+        800;
+
+      text-align:
+        left;
     }
 
-    .weekly-title{
-      font-size:19px;
-      font-weight:900;
-      text-align:left;
-      color:var(--blue);
+
+    .week-nav {
+      display:
+        flex;
+
+      gap:
+        10px;
+
+      overflow-x:
+        auto;
+
+      padding-bottom:
+        4px;
     }
 
-    .weekly-subtitle{
-      color:var(--muted);
-      font-size:13px;
-      margin-top:4px;
+
+    .day-button {
+      flex:
+        1 0 120px;
+
+      min-width:
+        120px;
+
+      height:
+        100px;
+
+      border:
+        1px solid
+        #dce3ed;
+
+      border-radius:
+        13px;
+
+      background:
+        #f8fafc;
+
+      cursor:
+        pointer;
+
+      display:
+        flex;
+
+      flex-direction:
+        column;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      gap:
+        5px;
+
+      transition:
+        .2s ease;
+
+      color:
+        #344054;
     }
 
-    /* =========================
-       NAVIGASI MINGGU
-    ========================= */
 
-    .week-nav{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
+    .day-button strong {
+      font-size:
+        14px;
     }
 
-    .week-nav button{
-      border:0;
-      font-family:inherit;
-      font-size:12px;
-      color:var(--blue);
-      background:#eef3fb;
-      padding:8px 10px;
-      border-radius:9px;
-      font-weight:700;
-      cursor:pointer;
+
+    .day-button span {
+      font-size:
+        30px;
+
+      font-weight:
+        800;
+
+      line-height:
+        1;
     }
 
-    .week-nav button:hover{
-      background:#dfe8f7;
+
+    .day-button:hover {
+      border-color:
+        #163f91;
+
+      transform:
+        translateY(-2px);
     }
 
-    /* =========================
-       5 KOTAK HARI
-    ========================= */
 
-    .weekly-buttons{
-      display:flex;
-      gap:12px;
-      overflow-x:auto;
-      padding:17px 2px 3px;
-      scrollbar-width:thin;
+    .day-button.active {
+      background:
+        #163f91;
+
+      color:
+        white;
+
+      border-color:
+        #163f91;
+
+      box-shadow:
+        0 6px 16px
+        rgba(22,63,145,.25);
     }
 
-    .day-button{
-      width:120px;
-      height:120px;
-      min-width:120px;
-      border:1px solid var(--line);
-      border-radius:16px;
-      background:#fff;
-      color:var(--blue);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-decoration:none;
-      box-shadow:0 6px 15px rgba(22,63,145,.06);
-      cursor:pointer;
-      font-family:inherit;
-      transition:.15s ease;
-    }
-
-    .day-button:hover{
-      border-color:var(--blue);
-      transform:translateY(-2px);
-    }
-
-    .day-button strong{
-      font-size:15px;
-    }
-
-    .day-button span{
-      font-size:38px;
-      font-weight:900;
-      margin-top:5px;
-    }
-
-    .day-button.active{
-      background:var(--blue);
-      color:#fff;
-      border-color:var(--blue);
-    }
-
-    /* =========================
-       MENU BELUM TERSEDIA
-    ========================= */
-
-    .empty-state{
-      text-align:center;
-      padding:55px 20px;
-      color:var(--muted);
-    }
-
-    .empty-state > div{
-      font-size:55px;
-    }
-
-    .empty-state h2{
-      color:var(--blue);
-    }
 
     /* =========================
        FOOTER
     ========================= */
 
-    footer{
-      width:min(100% - 30px,1000px);
-      margin:30px auto;
-      padding:20px 0;
-      color:var(--muted);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      font-size:13px;
-      border-top:1px solid var(--line);
+    footer {
+      margin-top:
+        30px;
+
+      padding:
+        28px 20px;
+
+      background:
+        #102f6d;
+
+      color:
+        white;
+
+      text-align:
+        center;
     }
 
-    footer strong{
-      color:var(--blue);
+
+    footer strong {
+      display:
+        block;
+
+      font-size:
+        15px;
+
+      margin-bottom:
+        4px;
     }
+
+
+    footer span {
+      font-size:
+        13px;
+
+      opacity:
+        .8;
+    }
+
 
     /* =========================
-       HP
+       MOBILE
     ========================= */
 
-    @media(max-width:700px){
+    @media (max-width: 700px) {
 
-      .site-header{
-        padding:20px;
+      header {
+        padding:
+          18px 15px;
       }
 
-      .site-header h1{
-        font-size:18px;
+
+      .header-inner {
+        gap:
+          11px;
       }
 
-      .site-header p{
-        font-size:13px;
+
+      .logo {
+        width:
+          48px;
+
+        height:
+          48px;
+
+        font-size:
+          23px;
       }
 
-      .weekly-head{
-        display:block;
+
+      .header-text h1 {
+        font-size:
+          17px;
       }
 
-      .week-nav{
-        margin-top:12px;
+
+      .header-text h2 {
+        font-size:
+          13px;
       }
 
-      .day-button{
-        width:105px;
-        min-width:105px;
-        height:105px;
+
+      .header-text p {
+        font-size:
+          11px;
       }
 
-      .day-button span{
-        font-size:32px;
+
+      main {
+        margin-top:
+          18px;
+
+        padding:
+          0 10px;
       }
 
-      .food-grid{
-        grid-template-columns:repeat(2,1fr);
+
+      .menu-content {
+        padding:
+          18px;
       }
 
-      .date-line{
-        display:block;
+
+      .day-name {
+        font-size:
+          24px;
       }
 
-      .date-line b{
-        display:block;
-        margin-top:5px;
+
+      .menu-title {
+        font-size:
+          20px;
       }
 
-      .menu-card{
-        padding:15px;
+
+      .food-grid {
+        grid-template-columns:
+          1fr;
       }
 
-      .photo-placeholder{
-        min-height:220px;
+
+      .weekly-menu {
+        padding:
+          15px;
       }
 
-      footer{
-        display:block;
-        line-height:1.7;
+
+      .day-button {
+        flex:
+          0 0 105px;
+
+        min-width:
+          105px;
+
+        height:
+          90px;
       }
 
-      footer span{
-        display:block;
+
+      .day-button span {
+        font-size:
+          27px;
       }
+
     }
-  </style>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/config.js"></script>
+  </style>
 </head>
+
 
 <body>
 
-<div class="page">
 
-  <!-- =========================
+  <!-- =====================================================
        HEADER
-  ========================== -->
+  ====================================================== -->
 
-  <header class="site-header">
+  <header>
 
-    <div class="brand-mark">✺</div>
+    <div class="header-inner">
 
-    <div>
-      <div class="eyebrow">
-        MAKAN BERGIZI GRATIS
+      <div class="logo">
+        ✺
       </div>
 
-      <h1>
-        SPPG POLRES BREBES KOTABARU
-      </h1>
+      <div class="header-text">
 
-      <p>
-        Yayasan Kemala Bhayangkari
-      </p>
+        <h1>
+          MAKAN BERGIZI GRATIS
+        </h1>
+
+        <h2>
+          SPPG POLRES BREBES KOTABARU
+        </h2>
+
+        <p>
+          Yayasan Kemala Bhayangkari
+        </p>
+
+      </div>
+
     </div>
 
   </header>
 
 
-  <!-- =========================
+  <!-- =====================================================
        MAIN
-  ========================== -->
+  ====================================================== -->
 
   <main>
 
-    <!-- =======================
-         MENU HARI INI
-    ======================== -->
+
+    <!-- ===================================================
+         MENU HARIAN
+    ==================================================== -->
 
     <section class="menu-card">
-
-      <div class="date-line">
-        <span id="dayName"></span>
-        <b id="displayDate"></b>
-      </div>
 
 
       <!-- FOTO -->
 
-      <div class="photo-wrap">
+      <div class="menu-photo-wrap">
 
         <img
           id="menuPhoto"
-          alt=""
-          style="display:none"
+          src=""
+          alt="Foto menu"
         >
 
-        <div
-          id="photoPlaceholder"
-          class="photo-placeholder"
-        >
-          📷
-          <br>
-          <span>Foto menu belum tersedia</span>
-        </div>
-
-        <div
-          class="photo-caption"
-          id="photoCaption"
-        >
-          MENU
+        <div id="photoPlaceholder">
+          Foto menu belum tersedia
         </div>
 
       </div>
 
 
-      <!-- KONTEN MENU -->
-
       <div
-        id="menuContent"
-        style="display:none"
+        id="photoCaption"
+        class="photo-caption"
       >
-
-        <h2 id="menuTitle"></h2>
-
-        <p
-          class="lead"
-          id="menuDescription"
-        ></p>
-
-
-        <!-- PERHATIAN -->
-
-        <div class="warning">
-
-          <h3>
-            ⚠️ PERHATIAN
-          </h3>
-
-          <ol>
-
-            <li>
-              Makanan sebaiknya segera dikonsumsi setelah diterima dan jangan dibawa pulang.
-            </li>
-
-            <li>
-              Periksa kondisi makanan sebelum dikonsumsi dan segera laporkan apabila terdapat makanan yang tidak sesuai.
-            </li>
-
-            <li>
-              Ompreng dikembalikan kepada petugas.
-            </li>
-
-          </ol>
-
-        </div>
-
-
-        <!-- ISI OMPRANG -->
-
-        <div class="section-title">
-          ISI OMPRANG HARI INI
-        </div>
-
-        <div class="food-grid">
-
-          <div>
-            <small>
-              Karbohidrat / Nasi
-            </small>
-            <strong id="carbohydrate"></strong>
-          </div>
-
-          <div>
-            <small>
-              Protein Hewani
-            </small>
-            <strong id="animal_protein"></strong>
-          </div>
-
-          <div>
-            <small>
-              Lauk Nabati
-            </small>
-            <strong id="plant_protein"></strong>
-          </div>
-
-          <div>
-            <small>
-              Sayur
-            </small>
-            <strong id="vegetable"></strong>
-          </div>
-
-          <div>
-            <small>
-              Buah
-            </small>
-            <strong id="fruit"></strong>
-          </div>
-
-        </div>
-
-
-        <!-- NILAI GIZI -->
-
-        <div class="section-title">
-          INFORMASI NILAI GIZI
-        </div>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>Komponen</th>
-                <th>Porsi Kecil</th>
-                <th>Porsi Besar</th>
-              </tr>
-
-            </thead>
-
-            <tbody id="nutritionRows"></tbody>
-
-          </table>
-
-        </div>
-
+        MENU HARI INI
       </div>
 
 
-      <!-- MENU KOSONG -->
+      <!-- ISI MENU -->
 
-      <div
-        id="emptyState"
-        class="empty-state"
-        style="display:none"
-      >
+      <div class="menu-content">
 
-        <div>
-          🍽️
+
+        <h1
+          id="dayName"
+          class="day-name"
+        >
+          -
+        </h1>
+
+
+        <div
+          id="displayDate"
+          class="display-date"
+        >
+          -
         </div>
 
-        <h2>
-          Menu belum tersedia
+
+        <h2
+          id="menuTitle"
+          class="menu-title"
+        >
+          Paket Makan Bergizi Gratis
         </h2>
 
-        <p id="emptyText"></p>
+
+        <p
+          id="menuDescription"
+          class="menu-description"
+        >
+        </p>
+
+
+        <!-- ===============================================
+             EMPTY STATE
+        ================================================ -->
+
+        <div id="emptyState">
+
+          <div id="emptyText">
+            Data menu belum tersedia.
+          </div>
+
+        </div>
+
+
+        <!-- ===============================================
+             MENU CONTENT
+        ================================================ -->
+
+        <div id="menuContent">
+
+
+          <!-- ISI OMPRANG -->
+
+          <h3 class="sub-title">
+            ISI OMPRANG HARI INI
+          </h3>
+
+
+          <div class="food-grid">
+
+
+            <div class="food-item">
+
+              <div class="food-label">
+                Karbohidrat / Nasi
+              </div>
+
+              <div
+                id="carbohydrate"
+                class="food-value"
+              >
+                -
+              </div>
+
+            </div>
+
+
+            <div class="food-item">
+
+              <div class="food-label">
+                Protein Hewani
+              </div>
+
+              <div
+                id="animal_protein"
+                class="food-value"
+              >
+                -
+              </div>
+
+            </div>
+
+
+            <div class="food-item">
+
+              <div class="food-label">
+                Lauk Nabati
+              </div>
+
+              <div
+                id="plant_protein"
+                class="food-value"
+              >
+                -
+              </div>
+
+            </div>
+
+
+            <div class="food-item">
+
+              <div class="food-label">
+                Sayur
+              </div>
+
+              <div
+                id="vegetable"
+                class="food-value"
+              >
+                -
+              </div>
+
+            </div>
+
+
+            <div class="food-item">
+
+              <div class="food-label">
+                Buah
+              </div>
+
+              <div
+                id="fruit"
+                class="food-value"
+              >
+                -
+              </div>
+
+            </div>
+
+
+          </div>
+
+
+          <!-- PERINGATAN -->
+
+          <div class="warning">
+
+            <div class="warning-title">
+              ⚠️ Perhatian
+            </div>
+
+            <ol>
+
+              <li>
+                Makanan sebaiknya segera
+                dikonsumsi setelah diterima
+                dan jangan dibawa pulang.
+              </li>
+
+              <li>
+                Periksa kondisi makanan
+                sebelum dikonsumsi dan
+                segera laporkan apabila
+                terdapat makanan yang tidak
+                sesuai.
+              </li>
+
+              <li>
+                Ompreng dikembalikan
+                kepada petugas.
+              </li>
+
+            </ol>
+
+          </div>
+
+
+          <!-- NUTRISI -->
+
+          <h3 class="sub-title">
+            INFORMASI NILAI GIZI
+          </h3>
+
+
+          <div class="nutrition-wrap">
+
+            <table class="nutrition-table">
+
+              <thead>
+
+                <tr>
+
+                  <th>
+                    Kandungan
+                  </th>
+
+                  <th>
+                    Porsi Kecil
+                  </th>
+
+                  <th>
+                    Porsi Besar
+                  </th>
+
+                </tr>
+
+              </thead>
+
+
+              <tbody id="nutritionRows">
+
+                <tr>
+
+                  <td>
+                    Energi
+                  </td>
+
+                  <td>
+                    -
+                  </td>
+
+                  <td>
+                    -
+                  </td>
+
+                </tr>
+
+                <tr>
+
+                  <td>
+                    Protein
+                  </td>
+
+                  <td>
+                    -
+                  </td>
+
+                  <td>
+                    -
+                  </td>
+
+                </tr>
+
+                <tr>
+
+                  <td>
+                    Lemak
+                  </td>
+
+                  <td>
+                    -
+                  </td>
+
+                  <td>
+                    -
+                  </td>
+
+                </tr>
+
+                <tr>
+
+                  <td>
+                    Karbohidrat
+                  </td>
+
+                  <td>
+                    -
+                  </td>
+
+                  <td>
+                    -
+                  </td>
+
+                </tr>
+
+                <tr>
+
+                  <td>
+                    Serat
+                  </td>
+
+                  <td>
+                    -
+                  </td>
+
+                  <td>
+                    -
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+        </div>
 
       </div>
 
     </section>
 
 
-    <!-- =======================
+    <!-- ===================================================
          MENU MINGGU INI
-         PALING BAWAH
-    ======================== -->
+         
+         Tidak ada tombol minggu sebelumnya /
+         minggu berikutnya.
+         
+         app.js akan mengisi tanggal secara otomatis.
+    ==================================================== -->
 
     <section class="weekly-menu">
 
-      <div class="weekly-head">
-
-        <div>
-
-          <div class="weekly-title">
-            📅 MENU MINGGU INI
-          </div>
-
-          <div class="weekly-subtitle">
-            Pilih hari untuk melihat menu
-          </div>
-
-        </div>
-
-
-        <!-- NAVIGASI MINGGU -->
-
-        <div class="week-nav">
-
-          <button
-            id="prevWeek"
-            type="button"
-          >
-            ‹ Minggu sebelumnya
-          </button>
-
-          <button
-            id="nextWeek"
-            type="button"
-          >
-            Minggu berikutnya ›
-          </button>
-
-        </div>
-
+      <div class="section-title">
+        📅 MENU MINGGU INI
       </div>
 
 
-      <!-- 5 HARI -->
-
       <div
-        class="weekly-buttons"
         id="weeklyButtons"
-      ></div>
+        class="week-nav"
+      >
+      </div>
 
     </section>
+
 
   </main>
 
 
-  <!-- =========================
+  <!-- =====================================================
        FOOTER
-  ========================== -->
+  ====================================================== -->
 
   <footer>
 
@@ -778,14 +1290,26 @@
 
   </footer>
 
-</div>
+
+  <!-- =====================================================
+       SUPABASE
+  ====================================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+  </script>
 
 
-<!-- =========================
-     JAVASCRIPT
-========================== -->
+  <!-- CONFIG -->
 
-<script src="assets/app.js"></script>
+  <script src="assets/config.js">
+  </script>
+
+
+  <!-- APP -->
+
+  <script src="assets/app.js">
+  </script>
+
 
 </body>
 </html>
