@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#163f91"><title>MBG • Menu Hari Ini</title>
+<link rel="stylesheet" href="assets/style.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/config.js"></script></head>
+<body><div class="page">
+<header class="site-header"><div class="brand-mark">✺</div><div><div class="eyebrow">MAKAN BERGIZI GRATIS</div><h1>SPPG POLRES BREBES KOTABARU</h1><p>Yayasan Kemala Bhayangkari</p></div></header>
+<main><section class="weekly-menu"><div class="weekly-head"><div><div class="weekly-title">📅 MENU MINGGU INI</div><div class="weekly-subtitle">Pilih hari untuk melihat menu</div></div><div class="week-nav"><button id="prevWeek" type="button">‹ Minggu sebelumnya</button><button id="nextWeek" type="button">Minggu berikutnya ›</button></div></div><div class="weekly-buttons" id="weeklyButtons"></div></section>
+<section class="menu-card"><div class="date-line"><span id="dayName"></span><b id="displayDate"></b></div><div class="photo-wrap"><img id="menuPhoto" alt="" style="display:none"><div id="photoPlaceholder" class="photo-placeholder">📷<br><span>Foto menu belum tersedia</span></div><div class="photo-caption" id="photoCaption">MENU</div></div>
+<div id="menuContent" style="display:none"><h2 id="menuTitle"></h2><p class="lead" id="menuDescription"></p><div class="warning"><h3>⚠️ PERHATIAN</h3><ol><li>Makanan sebaiknya segera dikonsumsi setelah diterima dan jangan dibawa pulang.</li><li>Periksa kondisi makanan sebelum dikonsumsi dan segera laporkan apabila terdapat makanan yang tidak sesuai.</li><li>Ompreng dikembalikan kepada petugas.</li></ol></div>
+<div class="section-title">ISI OMPRANG HARI INI</div><div class="food-grid"><div><small>Karbohidrat / Nasi</small><strong id="carbohydrate"></strong></div><div><small>Protein Hewani</small><strong id="animal_protein"></strong></div><div><small>Lauk Nabati</small><strong id="plant_protein"></strong></div><div><small>Sayur</small><strong id="vegetable"></strong></div><div><small>Buah</small><strong id="fruit"></strong></div></div>
+<div class="section-title">INFORMASI NILAI GIZI</div><div class="table-wrap"><table><thead><tr><th>Komponen</th><th>Porsi Kecil</th><th>Porsi Besar</th></tr></thead><tbody id="nutritionRows"></tbody></table></div></div>
+<div id="emptyState" class="empty-state" style="display:none"><div>🍽️</div><h2>Menu belum tersedia</h2><p id="emptyText"></p></div></section></main>
+<footer><strong>SPPG POLRES BREBES KOTABARU</strong><span>Yayasan Kemala Bhayangkari</span></footer></div><script src="assets/app.js"></script></body></html>
