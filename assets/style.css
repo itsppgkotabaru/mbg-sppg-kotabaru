@@ -1,1 +1,483 @@
-:root{--blue:#163f91;--blue2:#0f2f70;--gold:#e5b84b;--ink:#17243b;--muted:#6b7890;--bg:#f4f7fc;--line:#dce5f5}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif}.page{min-height:100vh}.site-header{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;padding:25px max(20px,calc((100% - 1100px)/2));display:flex;align-items:center;gap:15px;position:relative}.brand-mark{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:var(--blue2);font-size:26px;font-weight:900;flex:0 0 50px}.eyebrow{font-size:12px;letter-spacing:1.8px;font-weight:800;opacity:.9}.site-header h1{font-size:22px;margin:4px 0}.site-header p{margin:0;opacity:.85}.weekly-menu,.menu-card{width:min(100% - 30px,1000px);margin:22px auto}.weekly-menu{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.weekly-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.weekly-title{font-size:19px;font-weight:900;text-align:left;color:var(--blue)}.weekly-subtitle{color:var(--muted);font-size:13px;margin-top:4px}.week-nav{display:flex;gap:8px;flex-wrap:wrap}.week-nav a{font-size:12px;text-decoration:none;color:var(--blue);background:#eef3fb;padding:8px 10px;border-radius:9px;font-weight:700}.weekly-buttons{display:flex;gap:12px;overflow-x:auto;padding:17px 2px 3px}.day-button{width:120px;height:120px;min-width:120px;border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--blue);display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 6px 15px rgba(22,63,145,.06)}.day-button strong{font-size:15px}.day-button span{font-size:38px;font-weight:900;margin-top:5px}.day-button.active{background:var(--blue);color:#fff;border-color:var(--blue)}.menu-card{background:#fff;border-radius:22px;padding:20px;box-shadow:0 14px 45px rgba(22,63,145,.09)}.date-line{display:flex;justify-content:space-between;gap:10px;align-items:center;color:var(--blue);margin-bottom:15px}.date-line span{font-size:22px;font-weight:900}.date-line b{font-size:15px}.photo-wrap{position:relative;overflow:hidden;border-radius:18px;background:#eaf0fa}.photo-wrap img{width:100%;display:block;max-height:520px;object-fit:cover}.photo-placeholder{min-height:280px;display:grid;place-items:center;text-align:center;font-size:55px;color:#91a0b7}.photo-placeholder span{font-size:14px}.photo-caption{position:absolute;left:15px;bottom:15px;background:rgba(22,63,145,.92);color:#fff;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:900}.menu-card h2{color:var(--blue);margin:20px 0 7px}.lead{color:var(--muted);line-height:1.6}.warning{background:#fff8e6;border:1px solid #f1d78a;border-radius:15px;padding:15px 18px;margin:20px 0}.warning h3{margin:0 0 8px;color:#7b5b00}.warning ol{margin:0;padding-left:22px;line-height:1.7}.section-title{font-weight:900;color:var(--blue);font-size:16px;margin:25px 0 12px}.food-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.food-grid>div{border:1px solid var(--line);border-radius:13px;padding:13px;min-height:95px}.food-grid small{display:block;color:var(--muted);margin-bottom:8px}.food-grid strong{display:block}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:500px}th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left}th{background:#edf3fc;color:var(--blue)}.empty-state{text-align:center;padding:55px 20px;color:var(--muted)}.empty-state>div{font-size:55px}.empty-state h2{color:var(--blue)}footer{width:min(100% - 30px,1000px);margin:30px auto;padding:20px 0;color:var(--muted);display:flex;justify-content:space-between;gap:10px;font-size:13px;border-top:1px solid var(--line)}footer strong{color:var(--blue)}.login-body{display:grid;place-items:center;min-height:100vh;padding:20px}.login-card{width:min(100%,430px);background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 18px 55px rgba(22,63,145,.12)}.login-card .brand-mark{margin-bottom:18px}.login-card h1{font-size:20px;color:var(--blue)}.login-card p{color:var(--muted);line-height:1.5}.login-card form{display:grid;gap:14px;margin-top:20px}.login-card label{display:grid;gap:7px;font-weight:700}.login-card input{border:1px solid #cbd6e8;border-radius:10px;padding:12px;font:inherit}.error{background:#fff0ef;color:#a61b12;padding:10px;border-radius:10px;font-weight:700}.back-link{display:block;margin-top:17px;color:var(--blue);text-decoration:none;font-weight:700}@media(max-width:700px){.weekly-head{display:block}.week-nav{margin-top:12px}.day-button{width:105px;min-width:105px;height:105px}.day-button span{font-size:32px}.food-grid{grid-template-columns:repeat(2,1fr)}.date-line{display:block}.date-line b{display:block;margin-top:5px}.site-header{padding:20px}.site-header h1{font-size:18px}}
+:root{
+  --blue:#163f91;
+  --blue2:#0f2f70;
+  --gold:#e5b84b;
+  --ink:#17243b;
+  --muted:#6b7890;
+  --bg:#f4f7fc;
+  --line:#dce5f5
+}
+
+*{
+  box-sizing:border-box
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter,Segoe UI,Arial,sans-serif
+}
+
+.page{
+  min-height:100vh
+}
+
+.site-header{
+  background:linear-gradient(135deg,var(--blue2),var(--blue));
+  color:#fff;
+  padding:25px max(20px,calc((100% - 1100px)/2));
+  display:flex;
+  align-items:center;
+  gap:15px;
+  position:relative
+}
+
+.brand-mark{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--gold);
+  color:var(--blue2);
+  font-size:26px;
+  font-weight:900;
+  flex:0 0 50px
+}
+
+.eyebrow{
+  font-size:12px;
+  letter-spacing:1.8px;
+  font-weight:800;
+  opacity:.9
+}
+
+.site-header h1{
+  font-size:22px;
+  margin:4px 0
+}
+
+.site-header p{
+  margin:0;
+  opacity:.85
+}
+
+/* =========================
+   MENU CARD
+========================= */
+
+.menu-card{
+  width:min(100% - 30px,1000px);
+  margin:22px auto;
+  background:#fff;
+  border-radius:22px;
+  padding:20px;
+  box-shadow:0 14px 45px rgba(22,63,145,.09)
+}
+
+.date-line{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  color:var(--blue);
+  margin-bottom:15px
+}
+
+.date-line span{
+  font-size:22px;
+  font-weight:900
+}
+
+.date-line b{
+  font-size:15px
+}
+
+/* =========================
+   FOTO
+========================= */
+
+.photo-wrap{
+  position:relative;
+  overflow:hidden;
+  border-radius:18px;
+  background:#eaf0fa
+}
+
+.photo-wrap img{
+  width:100%;
+  display:block;
+  max-height:520px;
+  object-fit:cover
+}
+
+.photo-placeholder{
+  min-height:280px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  font-size:55px;
+  color:#91a0b7
+}
+
+.photo-placeholder span{
+  font-size:14px
+}
+
+.photo-caption{
+  position:absolute;
+  left:15px;
+  bottom:15px;
+  background:rgba(22,63,145,.92);
+  color:#fff;
+  border-radius:10px;
+  padding:9px 12px;
+  font-size:12px;
+  font-weight:900
+}
+
+/* =========================
+   ISI MENU
+========================= */
+
+.menu-card h2{
+  color:var(--blue);
+  margin:20px 0 7px
+}
+
+.lead{
+  color:var(--muted);
+  line-height:1.6
+}
+
+.warning{
+  background:#fff8e6;
+  border:1px solid #f1d78a;
+  border-radius:15px;
+  padding:15px 18px;
+  margin:20px 0
+}
+
+.warning h3{
+  margin:0 0 8px;
+  color:#7b5b00
+}
+
+.warning ol{
+  margin:0;
+  padding-left:22px;
+  line-height:1.7
+}
+
+.section-title{
+  font-weight:900;
+  color:var(--blue);
+  font-size:16px;
+  margin:25px 0 12px
+}
+
+.food-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px
+}
+
+.food-grid>div{
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:13px;
+  min-height:95px
+}
+
+.food-grid small{
+  display:block;
+  color:var(--muted);
+  margin-bottom:8px
+}
+
+.food-grid strong{
+  display:block
+}
+
+/* =========================
+   TABEL GIZI
+========================= */
+
+.table-wrap{
+  overflow:auto
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:500px
+}
+
+th,td{
+  padding:12px;
+  border-bottom:1px solid var(--line);
+  text-align:left
+}
+
+th{
+  background:#edf3fc;
+  color:var(--blue)
+}
+
+/* =========================
+   MENU MINGGU INI
+   DI BAGIAN PALING BAWAH
+========================= */
+
+.weekly-menu{
+  width:min(100% - 30px,1000px);
+  margin:30px auto 22px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:18px
+}
+
+.weekly-head{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:flex-start
+}
+
+.weekly-title{
+  font-size:19px;
+  font-weight:900;
+  text-align:left;
+  color:var(--blue)
+}
+
+.weekly-subtitle{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:4px
+}
+
+/* Tombol minggu sebelumnya/berikutnya */
+
+.week-nav{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap
+}
+
+.week-nav button{
+  border:0;
+  font-size:12px;
+  text-decoration:none;
+  color:var(--blue);
+  background:#eef3fb;
+  padding:8px 10px;
+  border-radius:9px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.week-nav button:hover{
+  background:#dfe8f7
+}
+
+/* 5 kartu hari */
+
+.weekly-buttons{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding:17px 2px 3px
+}
+
+.day-button{
+  width:120px;
+  height:120px;
+  min-width:120px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#fff;
+  color:var(--blue);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  box-shadow:0 6px 15px rgba(22,63,145,.06);
+  cursor:pointer
+}
+
+.day-button strong{
+  font-size:15px
+}
+
+.day-button span{
+  font-size:38px;
+  font-weight:900;
+  margin-top:5px
+}
+
+.day-button.active{
+  background:var(--blue);
+  color:#fff;
+  border-color:var(--blue)
+}
+
+.day-button:hover{
+  border-color:var(--blue)
+}
+
+/* =========================
+   MENU KOSONG
+========================= */
+
+.empty-state{
+  text-align:center;
+  padding:55px 20px;
+  color:var(--muted)
+}
+
+.empty-state>div{
+  font-size:55px
+}
+
+.empty-state h2{
+  color:var(--blue)
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+  width:min(100% - 30px,1000px);
+  margin:30px auto;
+  padding:20px 0;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  font-size:13px;
+  border-top:1px solid var(--line)
+}
+
+footer strong{
+  color:var(--blue)
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+.login-body{
+  display:grid;
+  place-items:center;
+  min-height:100vh;
+  padding:20px
+}
+
+.login-card{
+  width:min(100%,430px);
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:28px;
+  box-shadow:0 18px 55px rgba(22,63,145,.12)
+}
+
+.login-card .brand-mark{
+  margin-bottom:18px
+}
+
+.login-card h1{
+  font-size:20px;
+  color:var(--blue)
+}
+
+.login-card p{
+  color:var(--muted);
+  line-height:1.5
+}
+
+.login-card form{
+  display:grid;
+  gap:14px;
+  margin-top:20px
+}
+
+.login-card label{
+  display:grid;
+  gap:7px;
+  font-weight:700
+}
+
+.login-card input{
+  border:1px solid #cbd6e8;
+  border-radius:10px;
+  padding:12px;
+  font:inherit
+}
+
+.error{
+  background:#fff0ef;
+  color:#a61b12;
+  padding:10px;
+  border-radius:10px;
+  font-weight:700
+}
+
+.back-link{
+  display:block;
+  margin-top:17px;
+  color:var(--blue);
+  text-decoration:none;
+  font-weight:700
+}
+
+/* =========================
+   HP / TABLET
+========================= */
+
+@media(max-width:700px){
+
+  .weekly-head{
+    display:block
+  }
+
+  .week-nav{
+    margin-top:12px
+  }
+
+  .day-button{
+    width:105px;
+    min-width:105px;
+    height:105px
+  }
+
+  .day-button span{
+    font-size:32px
+  }
+
+  .food-grid{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .date-line{
+    display:block
+  }
+
+  .date-line b{
+    display:block;
+    margin-top:5px
+  }
+
+  .site-header{
+    padding:20px
+  }
+
+  .site-header h1{
+    font-size:18px
+  }
+}
