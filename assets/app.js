@@ -185,52 +185,42 @@ function updateDayDate() {
    MENU MINGGU INI
    DITAMPILKAN LANGSUNG
 ========================================================= */
-
 function renderWeekButtons() {
 
   const weeklyButtons =
-    document.getElementById(
-      "weeklyButtons"
-    );
-
+    document.getElementById("weeklyButtons");
 
   if (!weeklyButtons) {
     return;
   }
 
-
   const realToday =
     todayWIB();
 
+  const today =
+    parseISO(realToday);
 
-  const start =
-    mondayOf(realToday);
-
+  /*
+     Tampilkan 3 hari sebelum hari ini
+     + hari ini
+     + 3 hari sesudah hari ini
+  */
 
   const dates = [];
 
+  for (let i = -3; i <= 3; i++) {
 
-  for (
-    let i = 0;
-    i < 7;
-    i++
-  ) {
-
-    const d =
-      new Date(start);
-
+    const d = new Date(today);
 
     d.setDate(
-      start.getDate() + i
+      today.getDate() + i
     );
-
 
     dates.push(
       toISO(d)
     );
 
   }
-
 
   weeklyButtons.innerHTML =
     dates
@@ -239,12 +229,10 @@ function renderWeekButtons() {
         const d =
           parseISO(iso);
 
-
         const active =
           iso === selectedDate
             ? " active"
             : "";
-
 
         return `
           <button
@@ -267,11 +255,8 @@ function renderWeekButtons() {
       })
       .join("");
 
-
   weeklyButtons
-    .querySelectorAll(
-      ".day-button"
-    )
+    .querySelectorAll(".day-button")
     .forEach(button => {
 
       button.addEventListener(
@@ -281,15 +266,11 @@ function renderWeekButtons() {
           selectedDate =
             this.dataset.date;
 
-
           setURL();
-
 
           updateDayDate();
 
-
           renderWeekButtons();
-
 
           loadMenu();
 
@@ -298,6 +279,31 @@ function renderWeekButtons() {
 
     });
 
+
+  /*
+     Hari aktif selalu berada di tengah
+  */
+
+  requestAnimationFrame(() => {
+
+    const activeButton =
+      weeklyButtons.querySelector(
+        ".day-button.active"
+      );
+
+    if (activeButton) {
+
+      activeButton.scrollIntoView({
+        behavior: "instant",
+        block: "nearest",
+        inline: "center"
+      });
+
+    }
+
+  });
+
+}
 
   /* Pusatkan tanggal aktif */
 
