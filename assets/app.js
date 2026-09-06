@@ -253,9 +253,30 @@ async function loadWeek() {
   // -------------------------------------------------------
   // TANGGAL YANG DIPILIH MENJADI AKTIF
   // -------------------------------------------------------
+requestAnimationFrame(() => {
 
-  const activeDate = selectedDate;
+  const activeButton =
+    weeklyButtons.querySelector(
+      ".day-button.active"
+    );
 
+  if (!activeButton) {
+    return;
+  }
+
+  const targetScroll =
+    activeButton.offsetLeft -
+    (
+      weeklyButtons.clientWidth -
+      activeButton.offsetWidth
+    ) / 2;
+
+  weeklyButtons.scrollTo({
+    left: targetScroll,
+    behavior: "smooth"
+  });
+
+});
 
   // -------------------------------------------------------
   // RENDER TOMBOL HARI
