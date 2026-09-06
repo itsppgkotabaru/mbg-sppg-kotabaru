@@ -434,47 +434,37 @@
       padding-bottom: 4px;
     }
 
-    .day-button {
-      flex: 1 0 120px;
-      min-width: 120px;
-      height: 100px;
-      border: 1px solid #dce3ed;
-      border-radius: 13px;
-      background: #f8fafc;
-      cursor: pointer;
+    .weekly-menu {
+  padding: 10px;
+}
 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
+.week-nav {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  overflow-x: hidden;
+  padding-bottom: 0;
+}
 
-      transition: .2s ease;
-      color: #344054;
-    }
+.day-button {
+  width: 100%;
+  min-width: 0;
+  height: 70px;
+  padding: 4px 2px;
+  gap: 3px;
+  border-radius: 8px;
+}
 
-    .day-button strong {
-      font-size: 14px;
-    }
+.day-button strong {
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
 
-    .day-button span {
-      font-size: 30px;
-      font-weight: 800;
-      line-height: 1;
-    }
-
-    .day-button:hover {
-      border-color: #163f91;
-      transform: translateY(-2px);
-    }
-
-    .day-button.active {
-      background: #163f91;
-      color: white;
-      border-color: #163f91;
-      box-shadow: 0 6px 16px rgba(22, 63, 145, .25);
-    }
-
+.day-button .date-number {
+  font-size: 20px !important;
+  font-weight: 800;
+}
 
     /* =========================================================
        FOOTER
