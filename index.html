@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -242,7 +241,6 @@
       transition: .2s ease;
     }
 
-    /* Karbohidrat berada sendiri di bagian atas */
     .food-item:first-child {
       grid-column: 1 / -1;
     }
@@ -250,7 +248,8 @@
     .food-item:hover {
       border-color: #163f91;
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(20, 45, 90, .08);
+      box-shadow:
+        0 4px 12px rgba(20, 45, 90, .08);
     }
 
     .food-label {
@@ -343,7 +342,8 @@
     .nutrition-table th,
     .nutrition-table td {
       padding: 11px 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, .14);
+      border-bottom:
+        1px solid rgba(255, 255, 255, .14);
       vertical-align: middle;
     }
 
@@ -452,16 +452,37 @@
       text-align: left;
     }
 
+
+    /* =========================================================
+       NAVIGASI HARI MINGGUAN
+       TANGGAL AKTIF DI TENGAH
+    ========================================================= */
+
     .week-nav {
       display: flex;
-      gap: 10px;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      box-sizing: border-box;
       overflow-x: auto;
-      padding-bottom: 4px;
+      overflow-y: hidden;
+      padding: 10px 50% 16px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .week-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .week-nav .day-button {
+      flex: 0 0 90px;
+      width: 90px;
+      min-width: 90px;
     }
 
     .day-button {
-      flex: 1 0 120px;
-      min-width: 120px;
       height: 100px;
       border: 1px solid #dce3ed;
       border-radius: 13px;
@@ -592,7 +613,6 @@
         gap: 8px;
       }
 
-      /* Karbohidrat tetap satu baris sendiri */
       .food-item:first-child {
         grid-column: 1 / -1;
       }
@@ -678,12 +698,18 @@
       }
 
       .week-nav {
-        gap: 6px;
+        gap: 8px;
+        padding-left: 50%;
+        padding-right: 50%;
+      }
+
+      .week-nav .day-button {
+        flex: 0 0 78px;
+        width: 78px;
+        min-width: 78px;
       }
 
       .day-button {
-        flex: 0 0 105px;
-        min-width: 105px;
         height: 90px;
       }
 
@@ -768,10 +794,6 @@
 
   <main>
 
-    <!-- ===================================================
-         MENU HARIAN
-    ==================================================== -->
-
     <section class="menu-card">
 
       <!-- FOTO MENU -->
@@ -812,9 +834,7 @@
         ></p>
 
 
-        <!-- =================================================
-             EMPTY STATE
-        ================================================== -->
+        <!-- EMPTY STATE -->
 
         <div id="emptyState">
 
@@ -825,9 +845,7 @@
         </div>
 
 
-        <!-- =================================================
-             MENU CONTENT
-        ================================================== -->
+        <!-- MENU CONTENT -->
 
         <div id="menuContent">
 
@@ -921,9 +939,7 @@
           </div>
 
 
-          <!-- =================================================
-               WAJIB DIPERHATIKAN
-          ================================================== -->
+          <!-- WAJIB DIPERHATIKAN -->
 
           <div class="warning">
 
@@ -953,9 +969,7 @@
           </div>
 
 
-          <!-- =================================================
-               GIZI PER PORSI
-          ================================================== -->
+          <!-- GIZI PER PORSI -->
 
           <div class="nutrition-section">
 
