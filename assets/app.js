@@ -32,8 +32,11 @@ if (
   !window.SUPABASE_URL ||
   window.SUPABASE_URL.startsWith("PASTE_")
 ) {
-  const emptyState = document.getElementById("emptyState");
-  const emptyText = document.getElementById("emptyText");
+  const emptyState =
+    document.getElementById("emptyState");
+
+  const emptyText =
+    document.getElementById("emptyText");
 
   if (emptyState) {
     emptyState.style.display = "block";
@@ -44,7 +47,9 @@ if (
       "Konfigurasi Supabase belum diisi. Silakan ikuti README.";
   }
 
-  throw new Error("Supabase config belum diisi.");
+  throw new Error(
+    "Supabase config belum diisi."
+  );
 }
 
 
@@ -52,10 +57,11 @@ if (
 // SUPABASE
 // =========================================================
 
-const sb = window.supabase.createClient(
-  window.SUPABASE_URL,
-  window.SUPABASE_ANON_KEY
-);
+const sb =
+  window.supabase.createClient(
+    window.SUPABASE_URL,
+    window.SUPABASE_ANON_KEY
+  );
 
 
 // =========================================================
@@ -63,11 +69,13 @@ const sb = window.supabase.createClient(
 // =========================================================
 
 function toISO(d) {
+
   return `${d.getFullYear()}-${String(
     d.getMonth() + 1
   ).padStart(2, "0")}-${String(
     d.getDate()
   ).padStart(2, "0")}`;
+
 }
 
 
@@ -76,15 +84,21 @@ function toISO(d) {
 // =========================================================
 
 function todayWIB() {
+
   const now = new Date();
 
-  const wib = new Date(
-    now.toLocaleString("en-US", {
-      timeZone: "Asia/Jakarta"
-    })
-  );
+  const wib =
+    new Date(
+      now.toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Jakarta"
+        }
+      )
+    );
 
   return toISO(wib);
+
 }
 
 
@@ -92,8 +106,11 @@ function todayWIB() {
 // TANGGAL AKTIF
 // =========================================================
 
-let selectedDate = todayWIB();
-let lastRealToday = selectedDate;
+let selectedDate =
+  todayWIB();
+
+let lastRealToday =
+  selectedDate;
 
 
 // =========================================================
@@ -101,13 +118,20 @@ let lastRealToday = selectedDate;
 // =========================================================
 
 function parseISO(s) {
-  const [a, b, c] = s.split("-").map(Number);
+
+  const [
+    a,
+    b,
+    c
+  ] =
+    s.split("-").map(Number);
 
   return new Date(
     a,
     b - 1,
     c
   );
+
 }
 
 
@@ -116,8 +140,12 @@ function parseISO(s) {
 // =========================================================
 
 function mondayOf(s) {
-  const d = parseISO(s);
-  const day = d.getDay();
+
+  const d =
+    parseISO(s);
+
+  const day =
+    d.getDay();
 
   d.setDate(
     d.getDate() +
@@ -129,6 +157,7 @@ function mondayOf(s) {
   );
 
   return d;
+
 }
 
 
@@ -137,11 +166,14 @@ function mondayOf(s) {
 // =========================================================
 
 function fmtDate(s) {
-  const d = parseISO(s);
+
+  const d =
+    parseISO(s);
 
   return `${d.getDate()} ${
     months[d.getMonth()]
   } ${d.getFullYear()}`;
+
 }
 
 
@@ -150,11 +182,13 @@ function fmtDate(s) {
 // =========================================================
 
 function setURL() {
+
   history.replaceState(
     null,
     "",
     `?date=${selectedDate}`
   );
+
 }
 
 
@@ -163,7 +197,10 @@ function setURL() {
 // =========================================================
 
 function esc(v) {
-  return String(v ?? "").replace(
+
+  return String(
+    v ?? ""
+  ).replace(
     /[&<>"']/g,
     c => ({
       "&": "&amp;",
@@ -173,35 +210,41 @@ function esc(v) {
       "'": "&#039;"
     }[c])
   );
+
 }
 
 
 // =========================================================
 // MENU MINGGU INI
-// SENIN - MINGGU
 // =========================================================
 
 async function loadWeek() {
 
-  const realToday = todayWIB();
+  const realToday =
+    todayWIB();
 
   // -------------------------------------------------------
   // TENTUKAN SENIN MINGGU INI
   // -------------------------------------------------------
 
-  const start = mondayOf(realToday);
+  const start =
+    mondayOf(realToday);
 
 
   // -------------------------------------------------------
   // BUAT 7 HARI
-  // SENIN - MINGGU
   // -------------------------------------------------------
 
   const dates = [];
 
-  for (let i = 0; i < 7; i++) {
+  for (
+    let i = 0;
+    i < 7;
+    i++
+  ) {
 
-    const d = new Date(start);
+    const d =
+      new Date(start);
 
     d.setDate(
       start.getDate() + i
@@ -210,6 +253,7 @@ async function loadWeek() {
     dates.push(
       toISO(d)
     );
+
   }
 
 
@@ -220,11 +264,14 @@ async function loadWeek() {
   const {
     data,
     error
-  } = await sb
-    .from("menus")
-    .select("menu_date")
-    .in("menu_date", dates);
-
+  } =
+    await sb
+      .from("menus")
+      .select("menu_date")
+      .in(
+        "menu_date",
+        dates
+      );
 
   if (error) {
 
@@ -251,32 +298,12 @@ async function loadWeek() {
 
 
   // -------------------------------------------------------
-  // TANGGAL YANG DIPILIH MENJADI AKTIF
+  // TANGGAL AKTIF
   // -------------------------------------------------------
-requestAnimationFrame(() => {
 
-  const activeButton =
-    weeklyButtons.querySelector(
-      ".day-button.active"
-    );
+  const activeDate =
+    selectedDate;
 
-  if (!activeButton) {
-    return;
-  }
-
-  const targetScroll =
-    activeButton.offsetLeft -
-    (
-      weeklyButtons.clientWidth -
-      activeButton.offsetWidth
-    ) / 2;
-
-  weeklyButtons.scrollTo({
-    left: targetScroll,
-    behavior: "smooth"
-  });
-
-});
 
   // -------------------------------------------------------
   // RENDER TOMBOL HARI
@@ -286,7 +313,8 @@ requestAnimationFrame(() => {
     dates
       .map(iso => {
 
-        const d = parseISO(iso);
+        const d =
+          parseISO(iso);
 
         const active =
           iso === activeDate
@@ -299,6 +327,7 @@ requestAnimationFrame(() => {
             type="button"
             data-date="${iso}"
           >
+
             <strong>
               ${labels[d.getDay()]}
             </strong>
@@ -306,8 +335,10 @@ requestAnimationFrame(() => {
             <span class="date-number">
               ${d.getDate()}
             </span>
+
           </button>
         `;
+
       })
       .join("");
 
@@ -317,7 +348,9 @@ requestAnimationFrame(() => {
   // -------------------------------------------------------
 
   weeklyButtons
-    .querySelectorAll(".day-button")
+    .querySelectorAll(
+      ".day-button"
+    )
     .forEach(button => {
 
       button.onclick = () => {
@@ -335,7 +368,7 @@ requestAnimationFrame(() => {
 
 
   // -------------------------------------------------------
-  // POSISIKAN TANGGAL AKTIF TEPAT DI TENGAH
+  // POSISIKAN TANGGAL AKTIF DI TENGAH
   // -------------------------------------------------------
 
   requestAnimationFrame(() => {
@@ -357,8 +390,16 @@ requestAnimationFrame(() => {
       ) / 2;
 
     weeklyButtons.scrollTo({
-      left: targetScroll,
-      behavior: "smooth"
+
+      left:
+        Math.max(
+          0,
+          targetScroll
+        ),
+
+      behavior:
+        "smooth"
+
     });
 
   });
@@ -377,7 +418,9 @@ async function loadMenu() {
   // -------------------------------------------------------
 
   const d =
-    parseISO(selectedDate);
+    parseISO(
+      selectedDate
+    );
 
 
   // =======================================================
@@ -409,7 +452,9 @@ async function loadMenu() {
   if (displayDate) {
 
     displayDate.textContent =
-      fmtDate(selectedDate);
+      fmtDate(
+        selectedDate
+      );
 
   }
 
@@ -421,14 +466,15 @@ async function loadMenu() {
   const {
     data: menu,
     error
-  } = await sb
-    .from("menus")
-    .select("*")
-    .eq(
-      "menu_date",
-      selectedDate
-    )
-    .maybeSingle();
+  } =
+    await sb
+      .from("menus")
+      .select("*")
+      .eq(
+        "menu_date",
+        selectedDate
+      )
+      .maybeSingle();
 
 
   // =======================================================
@@ -437,7 +483,9 @@ async function loadMenu() {
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
 
     showEmpty(
       "Gagal mengambil data menu. Periksa konfigurasi Supabase dan RLS."
@@ -471,7 +519,9 @@ async function loadMenu() {
         menu.photo_url;
 
       img.alt =
-        `Foto menu ${fmtDate(selectedDate)}`;
+        `Foto menu ${fmtDate(
+          selectedDate
+        )}`;
 
       img.style.display =
         "block";
@@ -645,6 +695,7 @@ async function loadMenu() {
             <tr>
 
               <td>
+
                 <strong>
                   ${esc(row[0])}
                 </strong>
@@ -654,6 +705,7 @@ async function loadMenu() {
                 <small>
                   (${esc(row[1])})
                 </small>
+
               </td>
 
               <td>
@@ -743,7 +795,8 @@ function checkDateChange() {
 
 
   if (
-    currentToday !== lastRealToday
+    currentToday !==
+    lastRealToday
   ) {
 
     lastRealToday =
