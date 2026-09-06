@@ -251,10 +251,10 @@ async function loadWeek() {
 
 
   // -------------------------------------------------------
-  // HARI INI MENJADI AKTIF
+  // TANGGAL YANG DIPILIH MENJADI AKTIF
   // -------------------------------------------------------
 
-  const activeDate = realToday;
+  const activeDate = selectedDate;
 
 
   // -------------------------------------------------------
@@ -328,26 +328,15 @@ async function loadWeek() {
       return;
     }
 
-    const containerRect =
-      weeklyButtons.getBoundingClientRect();
+    const targetScroll =
+      activeButton.offsetLeft -
+      (
+        weeklyButtons.clientWidth -
+        activeButton.offsetWidth
+      ) / 2;
 
-    const buttonRect =
-      activeButton.getBoundingClientRect();
-
-    const containerCenter =
-      containerRect.left +
-      containerRect.width / 2;
-
-    const buttonCenter =
-      buttonRect.left +
-      buttonRect.width / 2;
-
-    const distance =
-      buttonCenter -
-      containerCenter;
-
-    weeklyButtons.scrollBy({
-      left: distance,
+    weeklyButtons.scrollTo({
+      left: targetScroll,
       behavior: "smooth"
     });
 
