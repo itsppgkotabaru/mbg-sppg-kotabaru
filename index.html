@@ -34,12 +34,12 @@
         Helvetica,
         sans-serif;
 
-background:
-  #f4f7fb;
+      background:
+        #f4f7fb;
 
-color:
-  #172033;
-      
+      color:
+        #172033;
+
       line-height:
         1.6;
     }
@@ -505,152 +505,92 @@ color:
     ========================= */
 
     .nutrition-section {
-      margin-top:
-        25px;
-
-      padding:
-        20px;
-
-      background:
-        #ffffff;
-
-      border:
-        2px solid
-        #163f91;
-
-      border-radius:
-        14px;
-
-      box-shadow:
-        0 4px 14px rgba(0,0,0,0.08);
+      margin-top: 25px;
+      padding: 20px;
+      background: #163f91;
+      border: 2px solid #163f91;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
     }
-
 
     .nutrition-section .sub-title {
-      margin-top:
-        0;
-
-      margin-bottom:
-        15px;
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: white;
+      font-weight: 800;
     }
-
 
     .nutrition-wrap {
-      margin-top:
-        0;
-
-      overflow-x:
-        auto;
+      margin-top: 0;
+      overflow-x: auto;
     }
-
 
     .nutrition-table {
-      width:
-        100%;
-
-      border-collapse:
-        separate;
-
-      border-spacing:
-        0;
-
-      min-width:
-        560px;
-
-      overflow:
-        hidden;
-
-      border:
-        1px solid
-        #dce3ed;
-
-      border-radius:
-        12px;
-
-      box-shadow:
-        0 3px 10px
-        rgba(20,45,90,.06);
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 560px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,.12);
     }
-
 
     .nutrition-table th,
     .nutrition-table td {
-      padding:
-        12px 14px;
-
-      border-bottom:
-        1px solid
-        #e5eaf1;
-
-      text-align:
-        left;
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.14);
+      vertical-align: middle;
     }
-
 
     .nutrition-table th {
-      background:
-        #163f91;
-
-      color:
-        white;
-
-      font-size:
-        13px;
-
-      font-weight:
-        800;
+      background: #12377f;
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
     }
-
 
     .nutrition-table td {
-      background:
-        #ffffff;
-
-      font-size:
-        14px;
+      background: #2457b5;
+      color: white;
+      font-size: 14px;
+      text-align: center;
+      font-weight: 600;
     }
-
 
     .nutrition-table tbody tr:nth-child(even) td {
-      background:
-        #f7f9fc;
+      background: #2c61bd;
     }
-
 
     .nutrition-table tbody tr:last-child td {
-      border-bottom:
-        none;
+      border-bottom: none;
     }
 
+    .nutrition-table th:first-child,
+    .nutrition-table td:first-child {
+      width: 40%;
+      text-align: left;
+    }
+
+    .nutrition-table th:nth-child(2),
+    .nutrition-table td:nth-child(2),
+    .nutrition-table th:nth-child(3),
+    .nutrition-table td:nth-child(3) {
+      width: 30%;
+      text-align: center;
+    }
 
     .nutrition-table td:first-child {
-      font-weight:
-        700;
-
-      color:
-        #24324a;
+      font-weight: 700;
     }
-
-
-    .nutrition-table td:not(:first-child) {
-      font-weight:
-        600;
-
-      text-align:
-        center;
-    }
-
 
     /* Nilai ENERGI dibuat lebih menonjol, label tetap sama ukurannya */
-
     .nutrition-table tbody tr:first-child td:not(:first-child) {
-      font-size:
-        18px;
-
-      font-weight:
-        800;
+      font-size: 18px;
+      font-weight: 800;
     }
-
 
     /* =========================
        EMPTY STATE
@@ -1037,15 +977,6 @@ color:
   }
 </style>
 
-<style id="nutrition-table-alignment-fix">
-.nutrition-table { width:100%; table-layout:fixed; }
-.nutrition-table th:nth-child(1), .nutrition-table td:nth-child(1) { width:40%; text-align:left; }
-.nutrition-table th:nth-child(2), .nutrition-table td:nth-child(2),
-.nutrition-table th:nth-child(3), .nutrition-table td:nth-child(3) {
-  width:30%; text-align:center; vertical-align:middle;
-}
-</style>
-
 </head>
 
 
@@ -1292,7 +1223,7 @@ color:
           <div class="nutrition-section">
 
             <h3 class="sub-title">
-              KANDUNGAN GIZI PER PORSI
+              GIZI PER PORSI
             </h3>
 
 
@@ -1305,7 +1236,7 @@ color:
                 <tr>
 
                   <th>
-                   
+                    
                   </th>
 
                   <th>
