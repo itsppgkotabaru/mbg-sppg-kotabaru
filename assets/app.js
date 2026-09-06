@@ -263,15 +263,17 @@ function renderWeekButtons() {
         function() {
 
           selectedDate =
-            this.dataset.date;
+  this.dataset.date;
 
-          setURL();
+setURL();
 
-          updateDayDate();
+updateDayDate();
 
-          renderWeekButtons();
+renderWeekButtons();
 
-          loadMenu();
+loadMenu();
+
+scrollToMenuTop();
         }
       );
 
@@ -752,3 +754,36 @@ setInterval(
   checkDateChange,
   30000
 );
+
+/* =========================================================
+   RESIZE LAYAR
+========================================================= */
+
+function scrollToMenuTop() {
+  if (window.innerWidth <= 700) {
+    requestAnimationFrame(() => {
+
+      const dayDateHeader =
+        document.querySelector(".day-date-header");
+
+      if (!dayDateHeader) return;
+
+      const header =
+        document.querySelector("header");
+
+      const headerHeight =
+        header ? header.offsetHeight : 0;
+
+      const target =
+        dayDateHeader.getBoundingClientRect().top +
+        window.pageYOffset -
+        headerHeight;
+
+      window.scrollTo({
+        top: Math.max(0, target),
+        behavior: "smooth"
+      });
+
+    });
+  }
+}
