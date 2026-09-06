@@ -48,8 +48,7 @@
       );
       color: white;
       padding: 24px 20px;
-      box-shadow:
-        0 4px 14px rgba(0, 0, 0, .12);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
     }
 
     .header-inner {
@@ -224,34 +223,50 @@
 
 
     /* =========================================================
-       ISI OMPRENG
+       ISI OMPRENG HARI INI
     ========================================================= */
-@media (max-width: 700px) {
-  .food-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
 
-  .food-item:first-child {
-    grid-column: 1 / -1;
-  }
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
 
-  .food-item {
-    padding: 12px;
-    min-width: 0;
-  }
+    .food-item {
+      padding: 16px;
+      min-width: 0;
+      background: #f8fafc;
+      border: 1px solid #dce3ed;
+      border-radius: 12px;
+      text-align: center;
+      transition: .2s ease;
+    }
 
-  .food-label {
-    font-size: 11px;
-    margin-bottom: 3px;
-  }
+    /* Karbohidrat berada sendiri di bagian atas */
+    .food-item:first-child {
+      grid-column: 1 / -1;
+    }
 
-  .food-value {
-    font-size: 14px;
-    line-height: 1.3;
-  }
-}
+    .food-item:hover {
+      border-color: #163f91;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(20, 45, 90, .08);
+    }
+
+    .food-label {
+      margin-bottom: 5px;
+      color: #163f91;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .food-value {
+      color: #172033;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
 
     /* =========================================================
        WAJIB DIPERHATIKAN
@@ -567,9 +582,39 @@
         font-size: 20px;
       }
 
+
+      /* =====================================================
+         ISI OMPRENG - HP
+      ===================================================== */
+
       .food-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
       }
+
+      /* Karbohidrat tetap satu baris sendiri */
+      .food-item:first-child {
+        grid-column: 1 / -1;
+      }
+
+      .food-item {
+        padding: 12px 8px;
+      }
+
+      .food-label {
+        font-size: 11px;
+        margin-bottom: 3px;
+      }
+
+      .food-value {
+        font-size: 14px;
+        line-height: 1.3;
+      }
+
+
+      /* =====================================================
+         GIZI - HP
+      ===================================================== */
 
       .nutrition-section {
         padding: 12px;
@@ -623,8 +668,17 @@
         font-weight: 400 !important;
       }
 
+
+      /* =====================================================
+         MENU MINGGUAN - HP
+      ===================================================== */
+
       .weekly-menu {
         padding: 15px;
+      }
+
+      .week-nav {
+        gap: 6px;
       }
 
       .day-button {
@@ -633,9 +687,14 @@
         height: 90px;
       }
 
+      .day-button strong {
+        font-size: 12px;
+      }
+
       .day-button span {
         font-size: 27px;
       }
+
     }
 
   </style>
@@ -735,8 +794,6 @@
       <!-- ISI MENU -->
 
       <div class="menu-content">
-
-        <!-- Disembunyikan -->
 
         <h2
           id="menuTitle"
@@ -1050,11 +1107,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- CONFIG -->
-
   <script src="assets/config.js"></script>
-
-  <!-- APP -->
 
   <script src="assets/app.js"></script>
 
