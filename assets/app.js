@@ -282,26 +282,30 @@ function renderWeekButtons() {
      Atur ukuran agar tepat 7 kotak
   */
 
-  requestAnimationFrame(() => {
+requestAnimationFrame(() => {
 
-    resizeDateButtons();
+  resizeDateButtons();
 
-    const activeButton =
-      weeklyButtons.querySelector(
-        ".day-button.active"
-      );
+  const activeButton =
+    weeklyButtons.querySelector(
+      ".day-button.active"
+    );
 
-    if (activeButton) {
+  if (activeButton) {
 
-      activeButton.scrollIntoView({
-        behavior: "auto",
-        block: "nearest",
-        inline: "center"
-      });
+    const containerCenter =
+      weeklyButtons.clientWidth / 2;
 
-    }
+    const buttonCenter =
+      activeButton.offsetLeft +
+      activeButton.offsetWidth / 2;
 
-  });
+    weeklyButtons.scrollLeft =
+      buttonCenter - containerCenter;
+
+  }
+
+});
 }
 
 
