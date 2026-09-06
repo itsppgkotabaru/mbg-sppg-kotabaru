@@ -64,23 +64,17 @@ const sb = window.supabase.createClient(
 
 
 // =========================================================
-// TANGGAL
-// =========================================================
-
-const params =
-  new URLSearchParams(location.search);
-
-
-// =========================================================
-// KONVERSI TANGGAL KE FORMAT YYYY-MM-DD
+// KONVERSI TANGGAL KE YYYY-MM-DD
 // =========================================================
 
 function toISO(d) {
+
   return `${d.getFullYear()}-${String(
     d.getMonth() + 1
   ).padStart(2, "0")}-${String(
     d.getDate()
   ).padStart(2, "0")}`;
+
 }
 
 
@@ -92,31 +86,41 @@ function todayWIB() {
 
   const now = new Date();
 
-  const wib = new Date(
-    now.toLocaleString(
-      "en-US",
-      {
-        timeZone: "Asia/Jakarta"
-      }
-    )
-  );
+  const wib =
+    new Date(
+      now.toLocaleString(
+        "en-US",
+        {
+          timeZone: "Asia/Jakarta"
+        }
+      )
+    );
 
   return toISO(wib);
+
 }
 
 
 // =========================================================
-// TANGGAL YANG AKTIF
+// TANGGAL AKTIF
 //
-// SETIAP KALI WEBSITE DIBUKA / REFRESH
-// OTOMATIS KEMBALI KE HARI INI
+// Saat halaman dibuka:
+// otomatis menggunakan tanggal hari ini WIB.
+//
+// Jika user memilih tanggal lain:
+// pilihan tetap digunakan sampai tanggal
+// benar-benar berganti.
 // =========================================================
 
-let selectedDate = todayWIB();
+let selectedDate =
+  todayWIB();
+
+let lastRealToday =
+  selectedDate;
 
 
 // =========================================================
-// PARSE TANGGAL
+// PARSE TANGGAL YYYY-MM-DD
 // =========================================================
 
 function parseISO(s) {
@@ -129,25 +133,33 @@ function parseISO(s) {
     b - 1,
     c
   );
+
 }
 
 
 // =========================================================
-// SENIN DARI TANGGAL TERPILIH
+// SENIN DARI TANGGAL
 // =========================================================
 
 function mondayOf(s) {
 
-  const d = parseISO(s);
+  const d =
+    parseISO(s);
 
-  const day = d.getDay();
+  const day =
+    d.getDay();
 
   d.setDate(
     d.getDate() +
-    (day === 0 ? -6 : 1 - day)
+    (
+      day === 0
+        ? -6
+        : 1 - day
+    )
   );
 
   return d;
+
 }
 
 
@@ -157,11 +169,13 @@ function mondayOf(s) {
 
 function fmtDate(s) {
 
-  const d = parseISO(s);
+  const d =
+    parseISO(s);
 
   return `${d.getDate()} ${
     months[d.getMonth()]
   } ${d.getFullYear()}`;
+
 }
 
 
@@ -176,6 +190,7 @@ function setURL() {
     "",
     `?date=${selectedDate}`
   );
+
 }
 
 
@@ -185,7 +200,9 @@ function setURL() {
 
 function esc(v) {
 
-  return String(v ?? "").replace(
+  return String(
+    v ?? ""
+  ).replace(
     /[&<>"']/g,
     c => ({
       "&": "&amp;",
@@ -195,6 +212,7 @@ function esc(v) {
       "'": "&#039;"
     }[c])
   );
+
 }
 
 
@@ -204,28 +222,77 @@ function esc(v) {
 
 async function loadWeek() {
 
-  /*
-   * PENTING:
-   * Setiap kali loadWeek dijalankan,
-   * tanggal hari ini WIB dicek kembali.
-   *
-   * Tetapi jika user sedang memilih tanggal
-   * lain melalui tombol MENU MINGGU INI,
-   * pilihan tersebut tetap digunakan sampai
-   * halaman dibuka / refresh kembali.
-   */
+  // -------------------------------------------------------
+  // TANGGAL REAL-TIME WIB
+  // -------------------------------------------------------
+
+  const realToday =
+    todayWIB();
+
+  const todayDate =
+    parseISO(realToday);
+
+  const todayDay =
+    todayDate.getDay();
+
+
+  // -------------------------------------------------------
+  // MINGGU KERJA
+  //
+  // MENU MINGGU INI = SENIN - JUMAT
+  // -------------------------------------------------------
+
+  let weekBase =
+    realToday;
+
+
+  // -------------------------------------------------------
+  // SABTU / MINGGU
+  //
+  // Jika hari Sabtu atau Minggu,
+  // tampilkan minggu kerja berikutnya.
+  // -------------------------------------------------------
+
+  if (
+    todayDay === 6 ||
+    todayDay === 0
+  ) {
+
+    const nextMonday =
+      new Date(todayDate);
+
+    const daysToMonday =
+      todayDay === 6
+        ? 2
+        : 1;
+
+    nextMonday.setDate(
+      todayDate.getDate() +
+      daysToMonday
+    );
+
+    weekBase =
+      toISO(nextMonday);
+
+  }
+
 
   const start =
-    mondayOf(selectedDate);
+    mondayOf(weekBase);
+
 
   const dates = [];
 
 
-  // =======================================================
-  // SENIN SAMPAI JUMAT
-  // =======================================================
+  // -------------------------------------------------------
+  // SENIN - JUMAT
+  // -------------------------------------------------------
 
-  for (let i = 0; i < 5; i++) {
+  for (
+    let i = 0;
+    i < 5;
+    i++
+  ) {
 
     const d =
       new Date(start);
@@ -237,12 +304,13 @@ async function loadWeek() {
     dates.push(
       toISO(d)
     );
+
   }
 
 
-  // =======================================================
+  // -------------------------------------------------------
   // CEK DATA MENU DI SUPABASE
-  // =======================================================
+  // -------------------------------------------------------
 
   const {
     data,
@@ -258,14 +326,17 @@ async function loadWeek() {
 
   if (error) {
 
-    console.error(error);
+    console.error(
+      "Gagal mengambil daftar menu:",
+      error
+    );
 
   }
 
 
-  // =======================================================
-  // TOMBOL MENU MINGGU INI
-  // =======================================================
+  // -------------------------------------------------------
+  // CONTAINER
+  // -------------------------------------------------------
 
   const weeklyButtons =
     document.getElementById(
@@ -280,6 +351,35 @@ async function loadWeek() {
   }
 
 
+  // -------------------------------------------------------
+  // TANGGAL AKTIF
+  //
+  // Senin-Jumat:
+  // hari ini menjadi aktif.
+  //
+  // Sabtu-Minggu:
+  // Senin minggu berikutnya menjadi aktif.
+  // -------------------------------------------------------
+
+  let activeDate =
+    realToday;
+
+
+  if (
+    todayDay === 6 ||
+    todayDay === 0
+  ) {
+
+    activeDate =
+      dates[0];
+
+  }
+
+
+  // -------------------------------------------------------
+  // RENDER TOMBOL TANGGAL
+  // -------------------------------------------------------
+
   weeklyButtons.innerHTML =
     dates
       .map(iso => {
@@ -288,7 +388,7 @@ async function loadWeek() {
           parseISO(iso);
 
         const active =
-          iso === selectedDate
+          iso === activeDate
             ? " active"
             : "";
 
@@ -315,9 +415,9 @@ async function loadWeek() {
       .join("");
 
 
-  // =======================================================
+  // -------------------------------------------------------
   // KLIK TANGGAL
-  // =======================================================
+  // -------------------------------------------------------
 
   weeklyButtons
     .querySelectorAll(
@@ -337,6 +437,38 @@ async function loadWeek() {
       };
 
     });
+
+
+  // -------------------------------------------------------
+  // POSISIKAN TANGGAL AKTIF DI TENGAH
+  // -------------------------------------------------------
+
+  requestAnimationFrame(() => {
+
+    const activeButton =
+      weeklyButtons.querySelector(
+        ".day-button.active"
+      );
+
+
+    if (!activeButton) {
+
+      return;
+
+    }
+
+
+    // Gunakan scrollIntoView
+    // agar aktif berada di tengah.
+
+    activeButton.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center"
+    });
+
+  });
+
 }
 
 
@@ -359,6 +491,7 @@ async function loadMenu() {
       "dayName"
     );
 
+
   if (dayName) {
 
     dayName.textContent =
@@ -375,6 +508,7 @@ async function loadMenu() {
     document.getElementById(
       "displayDate"
     );
+
 
   if (displayDate) {
 
@@ -428,6 +562,7 @@ async function loadMenu() {
     document.getElementById(
       "menuPhoto"
     );
+
 
   const placeholder =
     document.getElementById(
@@ -508,6 +643,7 @@ async function loadMenu() {
       "emptyState"
     );
 
+
   const menuContent =
     document.getElementById(
       "menuContent"
@@ -535,11 +671,13 @@ async function loadMenu() {
   // =======================================================
 
   const foodItems = [
+
     "carbohydrate",
     "animal_protein",
     "plant_protein",
     "vegetable",
     "fruit"
+
   ];
 
 
@@ -623,6 +761,7 @@ async function loadMenu() {
             <tr>
 
               <td>
+
                 <strong>
                   ${esc(row[0])}
                 </strong>
@@ -632,13 +771,16 @@ async function loadMenu() {
                 <small>
                   (${esc(row[1])})
                 </small>
+
               </td>
+
 
               <td>
                 ${esc(
                   menu[row[2]] ?? "-"
                 )}
               </td>
+
 
               <td>
                 ${esc(
@@ -668,10 +810,12 @@ function showEmpty(text) {
       "menuContent"
     );
 
+
   const emptyState =
     document.getElementById(
       "emptyState"
     );
+
 
   const emptyText =
     document.getElementById(
@@ -713,6 +857,38 @@ function showEmpty(text) {
 
 
 // =========================================================
+// CEK PERGANTIAN HARI SECARA REAL-TIME
+//
+// Tidak perlu refresh halaman.
+// Ketika WIB berganti hari, menu otomatis diperbarui.
+// =========================================================
+
+function checkDateChange() {
+
+  const currentToday =
+    todayWIB();
+
+
+  if (
+    currentToday !== lastRealToday
+  ) {
+
+    lastRealToday =
+      currentToday;
+
+    selectedDate =
+      currentToday;
+
+    setURL();
+
+    render();
+
+  }
+
+}
+
+
+// =========================================================
 // RENDER
 // =========================================================
 
@@ -730,3 +906,13 @@ async function render() {
 // =========================================================
 
 render();
+
+
+// =========================================================
+// CEK TANGGAL SETIAP 30 DETIK
+// =========================================================
+
+setInterval(
+  checkDateChange,
+  30000
+);
