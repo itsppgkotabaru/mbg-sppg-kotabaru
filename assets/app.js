@@ -32,11 +32,8 @@ if (
   !window.SUPABASE_URL ||
   window.SUPABASE_URL.startsWith("PASTE_")
 ) {
-  const emptyState =
-    document.getElementById("emptyState");
-
-  const emptyText =
-    document.getElementById("emptyText");
+  const emptyState = document.getElementById("emptyState");
+  const emptyText = document.getElementById("emptyText");
 
   if (emptyState) {
     emptyState.style.display = "block";
@@ -47,9 +44,7 @@ if (
       "Konfigurasi Supabase belum diisi. Silakan ikuti README.";
   }
 
-  throw new Error(
-    "Supabase config belum diisi."
-  );
+  throw new Error("Supabase config belum diisi.");
 }
 
 
@@ -68,13 +63,11 @@ const sb = window.supabase.createClient(
 // =========================================================
 
 function toISO(d) {
-
   return `${d.getFullYear()}-${String(
     d.getMonth() + 1
   ).padStart(2, "0")}-${String(
     d.getDate()
   ).padStart(2, "0")}`;
-
 }
 
 
@@ -83,21 +76,15 @@ function toISO(d) {
 // =========================================================
 
 function todayWIB() {
-
   const now = new Date();
 
-  const wib =
-    new Date(
-      now.toLocaleString(
-        "en-US",
-        {
-          timeZone: "Asia/Jakarta"
-        }
-      )
-    );
+  const wib = new Date(
+    now.toLocaleString("en-US", {
+      timeZone: "Asia/Jakarta"
+    })
+  );
 
   return toISO(wib);
-
 }
 
 
@@ -106,7 +93,6 @@ function todayWIB() {
 // =========================================================
 
 let selectedDate = todayWIB();
-
 let lastRealToday = selectedDate;
 
 
@@ -115,16 +101,13 @@ let lastRealToday = selectedDate;
 // =========================================================
 
 function parseISO(s) {
-
-  const [a, b, c] =
-    s.split("-").map(Number);
+  const [a, b, c] = s.split("-").map(Number);
 
   return new Date(
     a,
     b - 1,
     c
   );
-
 }
 
 
@@ -133,12 +116,8 @@ function parseISO(s) {
 // =========================================================
 
 function mondayOf(s) {
-
-  const d =
-    parseISO(s);
-
-  const day =
-    d.getDay();
+  const d = parseISO(s);
+  const day = d.getDay();
 
   d.setDate(
     d.getDate() +
@@ -150,7 +129,6 @@ function mondayOf(s) {
   );
 
   return d;
-
 }
 
 
@@ -159,14 +137,11 @@ function mondayOf(s) {
 // =========================================================
 
 function fmtDate(s) {
-
-  const d =
-    parseISO(s);
+  const d = parseISO(s);
 
   return `${d.getDate()} ${
     months[d.getMonth()]
   } ${d.getFullYear()}`;
-
 }
 
 
@@ -175,13 +150,11 @@ function fmtDate(s) {
 // =========================================================
 
 function setURL() {
-
   history.replaceState(
     null,
     "",
     `?date=${selectedDate}`
   );
-
 }
 
 
@@ -190,10 +163,7 @@ function setURL() {
 // =========================================================
 
 function esc(v) {
-
-  return String(
-    v ?? ""
-  ).replace(
+  return String(v ?? "").replace(
     /[&<>"']/g,
     c => ({
       "&": "&amp;",
@@ -203,7 +173,6 @@ function esc(v) {
       "'": "&#039;"
     }[c])
   );
-
 }
 
 
@@ -214,23 +183,13 @@ function esc(v) {
 
 async function loadWeek() {
 
-  // -------------------------------------------------------
-  // TANGGAL HARI INI WIB
-  // -------------------------------------------------------
-
-  const realToday =
-    todayWIB();
-
-  const todayDate =
-    parseISO(realToday);
-
+  const realToday = todayWIB();
 
   // -------------------------------------------------------
   // TENTUKAN SENIN MINGGU INI
   // -------------------------------------------------------
 
-  const start =
-    mondayOf(realToday);
+  const start = mondayOf(realToday);
 
 
   // -------------------------------------------------------
@@ -240,14 +199,9 @@ async function loadWeek() {
 
   const dates = [];
 
-  for (
-    let i = 0;
-    i < 7;
-    i++
-  ) {
+  for (let i = 0; i < 7; i++) {
 
-    const d =
-      new Date(start);
+    const d = new Date(start);
 
     d.setDate(
       start.getDate() + i
@@ -256,7 +210,6 @@ async function loadWeek() {
     dates.push(
       toISO(d)
     );
-
   }
 
 
@@ -270,10 +223,7 @@ async function loadWeek() {
   } = await sb
     .from("menus")
     .select("menu_date")
-    .in(
-      "menu_date",
-      dates
-    );
+    .in("menu_date", dates);
 
 
   if (error) {
@@ -295,21 +245,16 @@ async function loadWeek() {
       "weeklyButtons"
     );
 
-
   if (!weeklyButtons) {
-
     return;
-
   }
 
 
   // -------------------------------------------------------
   // HARI INI MENJADI AKTIF
-  // TERMASUK SABTU DAN MINGGU
   // -------------------------------------------------------
 
-  const activeDate =
-    realToday;
+  const activeDate = realToday;
 
 
   // -------------------------------------------------------
@@ -320,14 +265,12 @@ async function loadWeek() {
     dates
       .map(iso => {
 
-        const d =
-          parseISO(iso);
+        const d = parseISO(iso);
 
         const active =
           iso === activeDate
             ? " active"
             : "";
-
 
         return `
           <button
@@ -335,7 +278,6 @@ async function loadWeek() {
             type="button"
             data-date="${iso}"
           >
-
             <strong>
               ${labels[d.getDay()]}
             </strong>
@@ -343,10 +285,8 @@ async function loadWeek() {
             <span class="date-number">
               ${d.getDate()}
             </span>
-
           </button>
         `;
-
       })
       .join("");
 
@@ -356,9 +296,7 @@ async function loadWeek() {
   // -------------------------------------------------------
 
   weeklyButtons
-    .querySelectorAll(
-      ".day-button"
-    )
+    .querySelectorAll(".day-button")
     .forEach(button => {
 
       button.onclick = () => {
@@ -376,37 +314,47 @@ async function loadWeek() {
 
 
   // -------------------------------------------------------
-  // POSISIKAN TANGGAL AKTIF DI TENGAH
+  // POSISIKAN TANGGAL AKTIF TEPAT DI TENGAH
   // -------------------------------------------------------
 
-requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
 
-  const activeButton =
-    weeklyButtons.querySelector(
-      ".day-button.active"
-    );
+    const activeButton =
+      weeklyButtons.querySelector(
+        ".day-button.active"
+      );
 
-  if (!activeButton) {
-    return;
-  }
+    if (!activeButton) {
+      return;
+    }
 
-  const containerCenter =
-    weeklyButtons.clientWidth / 2;
+    const containerRect =
+      weeklyButtons.getBoundingClientRect();
 
-  const buttonCenter =
-    activeButton.offsetLeft +
-    activeButton.offsetWidth / 2;
+    const buttonRect =
+      activeButton.getBoundingClientRect();
 
-  const scrollPosition =
-    buttonCenter -
-    containerCenter;
+    const containerCenter =
+      containerRect.left +
+      containerRect.width / 2;
 
-  weeklyButtons.scrollTo({
-    left: scrollPosition,
-    behavior: "smooth"
+    const buttonCenter =
+      buttonRect.left +
+      buttonRect.width / 2;
+
+    const distance =
+      buttonCenter -
+      containerCenter;
+
+    weeklyButtons.scrollBy({
+      left: distance,
+      behavior: "smooth"
+    });
+
   });
 
-});
+}
+
 
 // =========================================================
 // LOAD MENU
@@ -431,7 +379,6 @@ async function loadMenu() {
       "dayName"
     );
 
-
   if (dayName) {
 
     dayName.textContent =
@@ -449,13 +396,10 @@ async function loadMenu() {
       "displayDate"
     );
 
-
   if (displayDate) {
 
     displayDate.textContent =
-      fmtDate(
-        selectedDate
-      );
+      fmtDate(selectedDate);
 
   }
 
@@ -503,7 +447,6 @@ async function loadMenu() {
       "menuPhoto"
     );
 
-
   const placeholder =
     document.getElementById(
       "photoPlaceholder"
@@ -518,15 +461,12 @@ async function loadMenu() {
         menu.photo_url;
 
       img.alt =
-        `Foto menu ${fmtDate(
-          selectedDate
-        )}`;
+        `Foto menu ${fmtDate(selectedDate)}`;
 
       img.style.display =
         "block";
 
     }
-
 
     if (placeholder) {
 
@@ -545,7 +485,6 @@ async function loadMenu() {
         "none";
 
     }
-
 
     if (placeholder) {
 
@@ -583,7 +522,6 @@ async function loadMenu() {
       "emptyState"
     );
 
-
   const menuContent =
     document.getElementById(
       "menuContent"
@@ -596,7 +534,6 @@ async function loadMenu() {
       "none";
 
   }
-
 
   if (menuContent) {
 
@@ -611,13 +548,11 @@ async function loadMenu() {
   // =======================================================
 
   const foodItems = [
-
     "carbohydrate",
     "animal_protein",
     "plant_protein",
     "vegetable",
     "fruit"
-
   ];
 
 
@@ -628,7 +563,6 @@ async function loadMenu() {
         document.getElementById(
           key
         );
-
 
       if (element) {
 
@@ -701,7 +635,6 @@ async function loadMenu() {
             <tr>
 
               <td>
-
                 <strong>
                   ${esc(row[0])}
                 </strong>
@@ -711,16 +644,13 @@ async function loadMenu() {
                 <small>
                   (${esc(row[1])})
                 </small>
-
               </td>
-
 
               <td>
                 ${esc(
                   menu[row[2]] ?? "-"
                 )}
               </td>
-
 
               <td>
                 ${esc(
@@ -750,12 +680,10 @@ function showEmpty(text) {
       "menuContent"
     );
 
-
   const emptyState =
     document.getElementById(
       "emptyState"
     );
-
 
   const emptyText =
     document.getElementById(
@@ -770,14 +698,12 @@ function showEmpty(text) {
 
   }
 
-
   if (emptyState) {
 
     emptyState.style.display =
       "block";
 
   }
-
 
   if (emptyText) {
 
