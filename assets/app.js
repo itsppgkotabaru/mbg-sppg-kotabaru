@@ -29,13 +29,8 @@ const months = [
 ========================================================= */
 
 function toISO(d) {
-  return `${d.getFullYear()}-${String(
-    d.getMonth() + 1
-  ).padStart(2, "0")}-${String(
-    d.getDate()
-  ).padStart(2, "0")}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
-
 
 function todayWIB() {
   const now = new Date();
@@ -49,10 +44,8 @@ function todayWIB() {
   return toISO(wib);
 }
 
-
 function parseISO(s) {
-  const [y, m, d] =
-    s.split("-").map(Number);
+  const [y, m, d] = s.split("-").map(Number);
 
   return new Date(
     y,
@@ -61,26 +54,10 @@ function parseISO(s) {
   );
 }
 
-
-function mondayOf(s) {
-  const d = parseISO(s);
-  const day = d.getDay();
-
-  d.setDate(
-    d.getDate() +
-    (day === 0 ? -6 : 1 - day)
-  );
-
-  return d;
-}
-
-
 function fmtDate(s) {
   const d = parseISO(s);
 
-  return `${d.getDate()} ${
-    months[d.getMonth()]
-  } ${d.getFullYear()}`;
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 
@@ -89,11 +66,8 @@ function fmtDate(s) {
 ========================================================= */
 
 function getInitialDate() {
-
   const params =
-    new URLSearchParams(
-      window.location.search
-    );
+    new URLSearchParams(window.location.search);
 
   const date =
     params.get("date");
@@ -108,23 +82,16 @@ function getInitialDate() {
   return todayWIB();
 }
 
+let selectedDate = getInitialDate();
 
-let selectedDate =
-  getInitialDate();
-
-
-let lastRealToday =
-  todayWIB();
-
+let lastRealToday = todayWIB();
 
 function setURL() {
-
   history.replaceState(
     null,
     "",
     `?date=${selectedDate}`
   );
-
 }
 
 
@@ -133,7 +100,6 @@ function setURL() {
 ========================================================= */
 
 function esc(v) {
-
   return String(v ?? "")
     .replace(
       /[&<>"']/g,
@@ -145,7 +111,6 @@ function esc(v) {
         "'": "&#039;"
       }[c])
     );
-
 }
 
 
@@ -154,38 +119,68 @@ function esc(v) {
 ========================================================= */
 
 function updateDayDate() {
-
-  const d =
-    parseISO(selectedDate);
-
+  const d = parseISO(selectedDate);
 
   const dayName =
-    document.getElementById(
-      "dayName"
-    );
-
+    document.getElementById("dayName");
 
   const displayDate =
-    document.getElementById(
-      "displayDate"
-    );
-
+    document.getElementById("displayDate");
 
   if (dayName) {
-
     dayName.textContent =
       labels[d.getDay()];
-
   }
-
 
   if (displayDate) {
-
     displayDate.textContent =
       fmtDate(selectedDate);
-
   }
+}
 
+
+/* =========================================================
+   ATUR LEBAR KOTAK HARI
+   TEPAT 7 KOTAK TERLIHAT
+========================================================= */
+
+function resizeDateButtons() {
+  const weeklyButtons =
+    document.getElementById("weeklyButtons");
+
+  if (!weeklyButtons) return;
+
+  const buttons =
+    weeklyButtons.querySelectorAll(".day-button");
+
+  if (!buttons.length) return;
+
+  const style =
+    getComputedStyle(weeklyButtons);
+
+  const gap =
+    parseFloat(style.columnGap || style.gap) || 0;
+
+  const containerWidth =
+    weeklyButtons.clientWidth;
+
+  /*
+     7 kotak + 6 celah
+  */
+
+  const buttonWidth =
+    (containerWidth - (gap * 6)) / 7;
+
+  buttons.forEach(button => {
+    button.style.width =
+      `${buttonWidth}px`;
+
+    button.style.minWidth =
+      `${buttonWidth}px`;
+
+    button.style.flex =
+      `0 0 ${buttonWidth}px`;
+  });
 }
 
 
@@ -196,38 +191,25 @@ function updateDayDate() {
 ========================================================= */
 
 function renderWeekButtons() {
-
   const weeklyButtons =
-    document.getElementById(
-      "weeklyButtons"
-    );
+    document.getElementById("weeklyButtons");
 
-
-  if (!weeklyButtons) {
-    return;
-  }
-
-
-  /*
-     selectedDate menjadi pusat.
-
-     Tampilkan:
-     30 hari sebelumnya
-     sampai
-     30 hari sesudahnya.
-
-     Total = 61 tanggal.
-  */
+  if (!weeklyButtons) return;
 
   const centerDate =
     parseISO(selectedDate);
 
-
   const dates = [];
 
+  /*
+     30 hari sebelum
+     sampai
+     30 hari sesudah.
+
+     Total 61 tanggal.
+  */
 
   for (let i = -30; i <= 30; i++) {
-
     const d =
       new Date(centerDate);
 
@@ -238,75 +220,58 @@ function renderWeekButtons() {
     dates.push(
       toISO(d)
     );
-
   }
 
-
   weeklyButtons.innerHTML =
-    dates
-      .map(iso => {
+    dates.map(iso => {
+      const d =
+        parseISO(iso);
 
-        const d =
-          parseISO(iso);
+      const active =
+        iso === selectedDate
+          ? " active"
+          : "";
 
+      return `
+        <button
+          class="day-button${active}"
+          type="button"
+          data-date="${iso}"
+        >
+          <strong>
+            ${labels[d.getDay()]}
+          </strong>
 
-        const active =
-          iso === selectedDate
-            ? " active"
-            : "";
-
-
-        return `
-          <button
-            class="day-button${active}"
-            type="button"
-            data-date="${iso}"
-          >
-
-            <strong>
-              ${labels[d.getDay()]}
-            </strong>
-
-            <span class="date-number">
-              ${d.getDate()}
-            </span>
-
-          </button>
-        `;
-
-      })
-      .join("");
+          <span class="date-number">
+            ${d.getDate()}
+          </span>
+        </button>
+      `;
+    }).join("");
 
 
   /*
-     Event klik tanggal
+     Klik tanggal
   */
 
   weeklyButtons
-    .querySelectorAll(
-      ".day-button"
-    )
+    .querySelectorAll(".day-button")
     .forEach(button => {
 
       button.addEventListener(
         "click",
-        function () {
+        function() {
 
           selectedDate =
             this.dataset.date;
 
-
           setURL();
-
 
           updateDayDate();
 
-
           renderWeekButtons();
 
-
           loadMenu();
-
         }
       );
 
@@ -314,21 +279,22 @@ function renderWeekButtons() {
 
 
   /*
-     Pusatkan tanggal aktif
+     Atur ukuran agar tepat 7 kotak
   */
 
   requestAnimationFrame(() => {
+
+    resizeDateButtons();
 
     const activeButton =
       weeklyButtons.querySelector(
         ".day-button.active"
       );
 
-
     if (activeButton) {
 
       activeButton.scrollIntoView({
-        behavior: "instant",
+        behavior: "auto",
         block: "nearest",
         inline: "center"
       });
@@ -336,7 +302,6 @@ function renderWeekButtons() {
     }
 
   });
-
 }
 
 
@@ -345,7 +310,6 @@ function renderWeekButtons() {
 ========================================================= */
 
 let sb = null;
-
 
 function initSupabase() {
 
@@ -359,14 +323,10 @@ function initSupabase() {
     );
 
     return false;
-
   }
 
-
   if (
-    window.SUPABASE_URL.startsWith(
-      "PASTE_"
-    )
+    window.SUPABASE_URL.startsWith("PASTE_")
   ) {
 
     console.error(
@@ -374,9 +334,7 @@ function initSupabase() {
     );
 
     return false;
-
   }
-
 
   if (
     !window.supabase ||
@@ -388,9 +346,7 @@ function initSupabase() {
     );
 
     return false;
-
   }
-
 
   sb =
     window.supabase.createClient(
@@ -398,9 +354,7 @@ function initSupabase() {
       window.SUPABASE_ANON_KEY
     );
 
-
   return true;
-
 }
 
 
@@ -410,61 +364,33 @@ function initSupabase() {
 
 async function loadMenu() {
 
-  /*
-     Hari dan tanggal tetap ditampilkan
-     walaupun Supabase bermasalah.
-  */
-
   updateDayDate();
 
-
   const img =
-    document.getElementById(
-      "menuPhoto"
-    );
-
+    document.getElementById("menuPhoto");
 
   const placeholder =
-    document.getElementById(
-      "photoPlaceholder"
-    );
-
+    document.getElementById("photoPlaceholder");
 
   const menuContent =
-    document.getElementById(
-      "menuContent"
-    );
-
+    document.getElementById("menuContent");
 
   const emptyState =
-    document.getElementById(
-      "emptyState"
-    );
+    document.getElementById("emptyState");
 
 
   if (!initSupabase()) {
 
     if (menuContent) {
-
-      menuContent.style.display =
-        "none";
-
+      menuContent.style.display = "none";
     }
-
 
     if (emptyState) {
-
-      emptyState.style.display =
-        "block";
-
+      emptyState.style.display = "block";
     }
 
-
     const emptyText =
-      document.getElementById(
-        "emptyText"
-      );
-
+      document.getElementById("emptyText");
 
     if (emptyText) {
 
@@ -475,12 +401,9 @@ async function loadMenu() {
         <br>
         Konfigurasi Supabase belum tersedia.
       `;
-
     }
 
-
     return;
-
   }
 
 
@@ -507,14 +430,11 @@ async function loadMenu() {
         error
       );
 
-
       showEmpty(
         "Gagal mengambil data menu. Periksa konfigurasi Supabase dan RLS."
       );
 
-
       return;
-
     }
 
 
@@ -529,24 +449,16 @@ async function loadMenu() {
         img.src =
           menu.photo_url;
 
-
         img.alt =
-          `Foto menu ${fmtDate(
-            selectedDate
-          )}`;
-
+          `Foto menu ${fmtDate(selectedDate)}`;
 
         img.style.display =
           "block";
-
       }
 
-
       if (placeholder) {
-
         placeholder.style.display =
           "none";
-
       }
 
     } else {
@@ -557,51 +469,38 @@ async function loadMenu() {
 
         img.style.display =
           "none";
-
       }
-
 
       if (placeholder) {
 
         placeholder.style.display =
           "flex";
-
       }
-
     }
 
 
     /* =====================================================
-       JIKA MENU BELUM ADA
+       MENU BELUM ADA
     ===================================================== */
 
     if (!menu) {
 
       showEmpty(
-        `Data menu untuk tanggal ${fmtDate(
-          selectedDate
-        )} belum dimasukkan oleh Admin.`
+        `Data menu untuk tanggal ${fmtDate(selectedDate)} belum dimasukkan oleh Admin.`
       );
 
-
       return;
-
     }
 
 
     if (emptyState) {
-
       emptyState.style.display =
         "none";
-
     }
 
-
     if (menuContent) {
-
       menuContent.style.display =
         "block";
-
     }
 
 
@@ -617,20 +516,15 @@ async function loadMenu() {
       "fruit"
     ];
 
-
     foodItems.forEach(key => {
 
       const element =
-        document.getElementById(
-          key
-        );
-
+        document.getElementById(key);
 
       if (element) {
 
         element.textContent =
           menu[key] || "-";
-
       }
 
     });
@@ -689,46 +583,39 @@ async function loadMenu() {
     if (nutritionRows) {
 
       nutritionRows.innerHTML =
-        rows
-          .map(row => {
+        rows.map(row => {
 
-            return `
-              <tr>
+          return `
+            <tr>
 
-                <td>
+              <td>
+                <strong>
+                  ${esc(row[0])}
+                </strong>
 
-                  <strong>
-                    ${esc(row[0])}
-                  </strong>
+                <br>
 
-                  <br>
+                <small>
+                  (${esc(row[1])})
+                </small>
+              </td>
 
-                  <small>
-                    (${esc(row[1])})
-                  </small>
+              <td>
+                ${esc(
+                  menu[row[2]] ?? "-"
+                )}
+              </td>
 
-                </td>
+              <td>
+                ${esc(
+                  menu[row[3]] ?? "-"
+                )}
+              </td>
 
+            </tr>
+          `;
 
-                <td>
-                  ${esc(
-                    menu[row[2]] ?? "-"
-                  )}
-                </td>
-
-
-                <td>
-                  ${esc(
-                    menu[row[3]] ?? "-"
-                  )}
-                </td>
-
-              </tr>
-            `;
-
-          })
-          .join("");
-
+        }).join("");
     }
 
   } catch (err) {
@@ -738,13 +625,10 @@ async function loadMenu() {
       err
     );
 
-
     showEmpty(
       "Terjadi kesalahan saat mengambil data menu."
     );
-
   }
-
 }
 
 
@@ -759,12 +643,10 @@ function showEmpty(text) {
       "menuContent"
     );
 
-
   const emptyState =
     document.getElementById(
       "emptyState"
     );
-
 
   const emptyText =
     document.getElementById(
@@ -773,20 +655,14 @@ function showEmpty(text) {
 
 
   if (menuContent) {
-
     menuContent.style.display =
       "none";
-
   }
-
 
   if (emptyState) {
-
     emptyState.style.display =
       "block";
-
   }
-
 
   if (emptyText) {
 
@@ -799,9 +675,7 @@ function showEmpty(text) {
 
       ${esc(text)}
     `;
-
   }
-
 }
 
 
@@ -814,7 +688,6 @@ function checkDateChange() {
   const currentToday =
     todayWIB();
 
-
   if (
     currentToday !==
     lastRealToday
@@ -823,30 +696,32 @@ function checkDateChange() {
     lastRealToday =
       currentToday;
 
-
-    /*
-       Saat hari berganti,
-       hari baru menjadi pusat.
-    */
-
     selectedDate =
       currentToday;
 
-
     setURL();
-
 
     updateDayDate();
 
-
     renderWeekButtons();
 
-
     loadMenu();
+  }
+}
+
+
+/* =========================================================
+   RESIZE LAYAR
+========================================================= */
+
+window.addEventListener(
+  "resize",
+  () => {
+
+    resizeDateButtons();
 
   }
-
-}
+);
 
 
 /* =========================================================
@@ -855,34 +730,12 @@ function checkDateChange() {
 
 function startPage() {
 
-  /*
-     Hari dan tanggal ditampilkan
-     terlebih dahulu.
-  */
-
   updateDayDate();
-
-
-  /*
-     Tanggal berjalan ditampilkan
-     sebelum Supabase.
-  */
 
   renderWeekButtons();
 
-
-  /*
-     Baru mengambil data menu.
-  */
-
   loadMenu();
-
 }
-
-
-/* =========================================================
-   JALANKAN
-========================================================= */
 
 startPage();
 
