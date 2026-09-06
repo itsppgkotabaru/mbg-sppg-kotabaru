@@ -89,6 +89,7 @@ function fmtDate(s) {
 ========================================================= */
 
 function getInitialDate() {
+
   const params =
     new URLSearchParams(
       window.location.search
@@ -117,11 +118,13 @@ let lastRealToday =
 
 
 function setURL() {
+
   history.replaceState(
     null,
     "",
     `?date=${selectedDate}`
   );
+
 }
 
 
@@ -130,6 +133,7 @@ function setURL() {
 ========================================================= */
 
 function esc(v) {
+
   return String(v ?? "")
     .replace(
       /[&<>"']/g,
@@ -141,12 +145,12 @@ function esc(v) {
         "'": "&#039;"
       }[c])
     );
+
 }
 
 
 /* =========================================================
    HARI DAN TANGGAL
-   DITAMPILKAN LANGSUNG
 ========================================================= */
 
 function updateDayDate() {
@@ -168,52 +172,67 @@ function updateDayDate() {
 
 
   if (dayName) {
+
     dayName.textContent =
       labels[d.getDay()];
+
   }
 
 
   if (displayDate) {
+
     displayDate.textContent =
       fmtDate(selectedDate);
+
   }
 
 }
 
 
 /* =========================================================
-   MENU MINGGU INI
-   DITAMPILKAN LANGSUNG
+   TANGGAL BERJALAN TERUS
+   BANYAK TANGGAL
+   YANG TERLIHAT HANYA 7 KOTAK
 ========================================================= */
+
 function renderWeekButtons() {
 
   const weeklyButtons =
-    document.getElementById("weeklyButtons");
+    document.getElementById(
+      "weeklyButtons"
+    );
+
 
   if (!weeklyButtons) {
     return;
   }
 
-  const realToday =
-    todayWIB();
-
-  const today =
-    parseISO(realToday);
 
   /*
-     Tampilkan 3 hari sebelum hari ini
-     + hari ini
-     + 3 hari sesudah hari ini
+     selectedDate menjadi pusat.
+
+     Tampilkan:
+     30 hari sebelumnya
+     sampai
+     30 hari sesudahnya.
+
+     Total = 61 tanggal.
   */
+
+  const centerDate =
+    parseISO(selectedDate);
+
 
   const dates = [];
 
-  for (let i = -3; i <= 3; i++) {
 
-    const d = new Date(today);
+  for (let i = -30; i <= 30; i++) {
+
+    const d =
+      new Date(centerDate);
 
     d.setDate(
-      today.getDate() + i
+      centerDate.getDate() + i
     );
 
     dates.push(
@@ -222,6 +241,7 @@ function renderWeekButtons() {
 
   }
 
+
   weeklyButtons.innerHTML =
     dates
       .map(iso => {
@@ -229,10 +249,12 @@ function renderWeekButtons() {
         const d =
           parseISO(iso);
 
+
         const active =
           iso === selectedDate
             ? " active"
             : "";
+
 
         return `
           <button
@@ -255,8 +277,15 @@ function renderWeekButtons() {
       })
       .join("");
 
+
+  /*
+     Event klik tanggal
+  */
+
   weeklyButtons
-    .querySelectorAll(".day-button")
+    .querySelectorAll(
+      ".day-button"
+    )
     .forEach(button => {
 
       button.addEventListener(
@@ -266,11 +295,15 @@ function renderWeekButtons() {
           selectedDate =
             this.dataset.date;
 
+
           setURL();
+
 
           updateDayDate();
 
+
           renderWeekButtons();
+
 
           loadMenu();
 
@@ -281,7 +314,7 @@ function renderWeekButtons() {
 
 
   /*
-     Hari aktif selalu berada di tengah
+     Pusatkan tanggal aktif
   */
 
   requestAnimationFrame(() => {
@@ -290,6 +323,7 @@ function renderWeekButtons() {
       weeklyButtons.querySelector(
         ".day-button.active"
       );
+
 
     if (activeButton) {
 
@@ -302,23 +336,6 @@ function renderWeekButtons() {
     }
 
   });
-
-}
-
-  /* Pusatkan tanggal aktif */
-
-requestAnimationFrame(() => {
-  const activeButton =
-    weeklyButtons.querySelector(".day-button.active");
-
-  if (activeButton) {
-    activeButton.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center"
-    });
-  }
-});
 
 }
 
@@ -394,7 +411,7 @@ function initSupabase() {
 async function loadMenu() {
 
   /*
-     Hari dan tanggal TETAP ditampilkan
+     Hari dan tanggal tetap ditampilkan
      walaupun Supabase bermasalah.
   */
 
@@ -428,8 +445,10 @@ async function loadMenu() {
   if (!initSupabase()) {
 
     if (menuContent) {
+
       menuContent.style.display =
         "none";
+
     }
 
 
@@ -510,10 +529,12 @@ async function loadMenu() {
         img.src =
           menu.photo_url;
 
+
         img.alt =
           `Foto menu ${fmtDate(
             selectedDate
           )}`;
+
 
         img.style.display =
           "block";
@@ -675,6 +696,7 @@ async function loadMenu() {
               <tr>
 
                 <td>
+
                   <strong>
                     ${esc(row[0])}
                   </strong>
@@ -687,11 +709,13 @@ async function loadMenu() {
 
                 </td>
 
+
                 <td>
                   ${esc(
                     menu[row[2]] ?? "-"
                   )}
                 </td>
+
 
                 <td>
                   ${esc(
@@ -800,6 +824,11 @@ function checkDateChange() {
       currentToday;
 
 
+    /*
+       Saat hari berganti,
+       hari baru menjadi pusat.
+    */
+
     selectedDate =
       currentToday;
 
@@ -827,17 +856,23 @@ function checkDateChange() {
 function startPage() {
 
   /*
-     PENTING:
-     Dua bagian ini dijalankan SEBELUM Supabase.
+     Hari dan tanggal ditampilkan
+     terlebih dahulu.
   */
 
   updateDayDate();
+
+
+  /*
+     Tanggal berjalan ditampilkan
+     sebelum Supabase.
+  */
 
   renderWeekButtons();
 
 
   /*
-     Baru setelah itu ambil data menu.
+     Baru mengambil data menu.
   */
 
   loadMenu();
