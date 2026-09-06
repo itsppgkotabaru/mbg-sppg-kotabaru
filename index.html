@@ -458,19 +458,19 @@
        TANGGAL AKTIF DI TENGAH
     ========================================================= */
 
-    .week-nav {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      box-sizing: border-box;
-      overflow-x: auto;
-      overflow-y: hidden;
-      padding: 10px 50% 16px;
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
+.week-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px 0 16px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
 
     .week-nav::-webkit-scrollbar {
       display: none;
@@ -698,11 +698,9 @@
       }
 
       .week-nav {
-        gap: 8px;
-        padding-left: 50%;
-        padding-right: 50%;
-      }
-
+  gap: 8px;
+  padding: 10px 0 16px;
+}
       .week-nav .day-button {
         flex: 0 0 78px;
         width: 78px;
