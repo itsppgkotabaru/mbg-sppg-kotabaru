@@ -423,12 +423,14 @@ async function loadMenu(
 
 
   /* =======================================================
-     CEK SABTU / MINGGU
+     SABTU / MINGGU = OFF
   ======================================================= */
 
   if (isWeekend(dateString)) {
 
-    renderWeekendOff();
+    renderWeekendOff(
+      dateString
+    );
 
     return;
   }
@@ -586,34 +588,29 @@ function renderMenu(menu) {
   const foodFields = [
     [
       "carbohydrate",
-      "Karbohidrat",
       menu.carbohydrate
     ],
     [
       "animal_protein",
-      "Protein Hewani",
       menu.animal_protein
     ],
     [
       "plant_protein",
-      "Protein Nabati",
       menu.plant_protein
     ],
     [
       "vegetable",
-      "Sayuran",
       menu.vegetable
     ],
     [
       "fruit",
-      "Buah",
       menu.fruit
     ]
   ];
 
 
   foodFields.forEach(
-    ([id, label, value]) => {
+    ([id, value]) => {
 
       const element =
         document.getElementById(id);
@@ -629,7 +626,7 @@ function renderMenu(menu) {
 
 
   /* =======================================================
-     PERHATIAN
+     WAJIB DIPERHATIKAN
   ======================================================= */
 
   const warningText =
@@ -645,7 +642,7 @@ function renderMenu(menu) {
 
 
   /* =======================================================
-     NUTRISI
+     GIZI PER PORSI
   ======================================================= */
 
   const nutritionRows =
@@ -743,101 +740,81 @@ function renderMenu(menu) {
       ".menu-card"
     );
 
-  if (mainMenu) {
-
-    mainMenu.style.display =
-      "";
-  }
-
-
   const nutritionSection =
     document.querySelector(
       ".nutrition-section"
     );
 
-  if (nutritionSection) {
-
-    nutritionSection.style.display =
-      "";
-  }
-
-
   const warningBox =
     document.querySelector(
       ".warning-box"
     );
-
-  if (warningBox) {
-
-    warningBox.style.display =
-      "";
-  }
-
 
   const emptyState =
     document.getElementById(
       "emptyState"
     );
 
-  if (emptyState) {
 
-    emptyState.style.display =
-      "none";
+  if (mainMenu) {
+    mainMenu.style.display = "";
+  }
+
+  if (nutritionSection) {
+    nutritionSection.style.display = "";
+  }
+
+  if (warningBox) {
+    warningBox.style.display = "";
+  }
+
+  if (emptyState) {
+    emptyState.style.display = "none";
   }
 }
 
 
 /* =========================================================
-   SABTU / MINGGU - OFF
+   SABTU / MINGGU = OFF
 ========================================================= */
 
-function renderWeekendOff() {
-
-  /* =======================================================
-     SEMBUNYIKAN MENU UTAMA
-  ======================================================= */
+function renderWeekendOff(dateString) {
 
   const mainMenu =
     document.querySelector(
       ".menu-card"
     );
 
-  if (mainMenu) {
-
-    mainMenu.style.display =
-      "none";
-  }
-
-
-  /* =======================================================
-     SEMBUNYIKAN PERHATIAN
-  ======================================================= */
+  const nutritionSection =
+    document.querySelector(
+      ".nutrition-section"
+    );
 
   const warningBox =
     document.querySelector(
       ".warning-box"
     );
 
-  if (warningBox) {
-
-    warningBox.style.display =
-      "none";
-  }
+  const emptyState =
+    document.getElementById(
+      "emptyState"
+    );
 
 
   /* =======================================================
-     SEMBUNYIKAN NUTRISI
+     SEMBUNYIKAN MENU
   ======================================================= */
 
-  const nutritionSection =
-    document.querySelector(
-      ".nutrition-section"
-    );
+  if (mainMenu) {
+    mainMenu.style.display = "none";
+  }
 
   if (nutritionSection) {
+    nutritionSection.style.display = "none";
+  }
 
-    nutritionSection.style.display =
-      "none";
+  if (warningBox) {
+    warningBox.style.display = "none";
   }
 
 
@@ -845,129 +822,69 @@ function renderWeekendOff() {
      TAMPILKAN OFF
   ======================================================= */
 
-  let emptyState =
-    document.getElementById(
-      "emptyState"
-    );
+  if (emptyState) {
 
+    emptyState.innerHTML = `
+      <div
+        style="
+          text-align:center;
+          padding:35px 20px;
+          margin:20px 0;
+          background:#fff5f5;
+          border:1px solid #f1b5b5;
+          border-radius:15px;
+        "
+      >
 
-  if (!emptyState) {
+        <div
+          style="
+            font-size:38px;
+            margin-bottom:10px;
+          "
+        >
+          🔴
+        </div>
 
-    emptyState =
-      document.createElement(
-        "div"
-      );
+        <div
+          style="
+            font-size:24px;
+            font-weight:900;
+            color:#c62828;
+            margin-bottom:6px;
+          "
+        >
+          OFF
+        </div>
 
-    emptyState.id =
-      "emptyState";
+        <div
+          style="
+            font-size:15px;
+            font-weight:700;
+            color:#555;
+          "
+        >
+          Hari ${esc(
+            getDayName(dateString)
+          )}
+        </div>
 
-    const weeklyMenu =
-      document.querySelector(
-        ".weekly-menu"
-      );
+        <div
+          style="
+            font-size:13px;
+            color:#777;
+            margin-top:5px;
+          "
+        >
+          Tidak ada pelayanan menu
+          pada hari Sabtu dan Minggu.
+        </div>
 
-    if (weeklyMenu) {
+      </div>
+    `;
 
-      weeklyMenu.parentNode.insertBefore(
-        emptyState,
-        weeklyMenu
-      );
-
-    } else {
-
-      document.body.appendChild(
-        emptyState
-      );
-    }
+    emptyState.style.display =
+      "block";
   }
-
-
-  emptyState.innerHTML = `
-    <div
-      style="
-        text-align:center;
-        padding:35px 20px;
-        margin:20px 0;
-        background:#fff5f5;
-        border:1px solid #f1b5b5;
-        border-radius:15px;
-      "
-    >
-
-      <div
-        style="
-          font-size:38px;
-          margin-bottom:10px;
-        "
-      >
-        🔴
-      </div>
-
-      <div
-        style="
-          font-size:24px;
-          font-weight:900;
-          color:#c62828;
-          margin-bottom:6px;
-        "
-      >
-        OFF
-      </div>
-
-      <div
-        style="
-          font-size:15px;
-          font-weight:600;
-          color:#555;
-        "
-      >
-        Hari ${esc(
-          getDayName(
-            getCurrentSelectedDate()
-          )
-        )}
-      </div>
-
-      <div
-        style="
-          font-size:13px;
-          color:#777;
-          margin-top:5px;
-        "
-      >
-        Tidak ada pelayanan menu
-        pada hari Sabtu dan Minggu.
-      </div>
-
-    </div>
-  `;
-
-
-  emptyState.style.display =
-    "block";
-}
-
-
-/* =========================================================
-   TANGGAL YANG SEDANG DIPILIH
-========================================================= */
-
-function getCurrentSelectedDate() {
-
-  const activeButton =
-    document.querySelector(
-      ".day-button.active"
-    );
-
-  if (
-    activeButton &&
-    activeButton.dataset.date
-  ) {
-
-    return activeButton.dataset.date;
-  }
-
-  return todayWIB();
 }
 
 
@@ -984,102 +901,65 @@ function renderEmptyMenu(
       ".menu-card"
     );
 
-  if (mainMenu) {
-
-    mainMenu.style.display =
-      "none";
-  }
-
-
   const warningBox =
     document.querySelector(
       ".warning-box"
     );
-
-  if (warningBox) {
-
-    warningBox.style.display =
-      "none";
-  }
-
 
   const nutritionSection =
     document.querySelector(
       ".nutrition-section"
     );
 
-  if (nutritionSection) {
-
-    nutritionSection.style.display =
-      "none";
-  }
-
-
-  let emptyState =
+  const emptyState =
     document.getElementById(
       "emptyState"
     );
 
 
-  if (!emptyState) {
+  if (mainMenu) {
+    mainMenu.style.display = "none";
+  }
 
-    emptyState =
-      document.createElement(
-        "div"
-      );
+  if (warningBox) {
+    warningBox.style.display = "none";
+  }
 
-    emptyState.id =
-      "emptyState";
-
-    const weeklyMenu =
-      document.querySelector(
-        ".weekly-menu"
-      );
-
-    if (weeklyMenu) {
-
-      weeklyMenu.parentNode.insertBefore(
-        emptyState,
-        weeklyMenu
-      );
-
-    } else {
-
-      document.body.appendChild(
-        emptyState
-      );
-    }
+  if (nutritionSection) {
+    nutritionSection.style.display = "none";
   }
 
 
-  emptyState.innerHTML = `
-    <div
-      style="
-        text-align:center;
-        padding:30px 20px;
-        margin:20px 0;
-        background:#f8fafc;
-        border:1px solid #e5eaf2;
-        border-radius:15px;
-      "
-    >
+  if (emptyState) {
 
+    emptyState.innerHTML = `
       <div
         style="
-          font-size:17px;
-          font-weight:700;
-          color:#555;
+          text-align:center;
+          padding:30px 20px;
+          margin:20px 0;
+          background:#f8fafc;
+          border:1px solid #e5eaf2;
+          border-radius:15px;
         "
       >
-        ${esc(message)}
+
+        <div
+          style="
+            font-size:17px;
+            font-weight:700;
+            color:#555;
+          "
+        >
+          ${esc(message)}
+        </div>
+
       </div>
+    `;
 
-    </div>
-  `;
-
-
-  emptyState.style.display =
-    "block";
+    emptyState.style.display =
+      "block";
+  }
 }
 
 
@@ -1144,7 +1024,6 @@ async function render() {
 document.addEventListener(
   "DOMContentLoaded",
   () => {
-
     render();
   }
 );
