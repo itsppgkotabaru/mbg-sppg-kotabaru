@@ -504,9 +504,40 @@
        NUTRISI
     ========================= */
 
-    .nutrition-wrap {
+    .nutrition-section {
       margin-top:
         25px;
+
+      padding:
+        20px;
+
+      background:
+        #ffffff;
+
+      border:
+        2px solid
+        #163f91;
+
+      border-radius:
+        14px;
+
+      box-shadow:
+        0 4px 14px rgba(0,0,0,0.08);
+    }
+
+
+    .nutrition-section .sub-title {
+      margin-top:
+        0;
+
+      margin-bottom:
+        15px;
+    }
+
+
+    .nutrition-wrap {
+      margin-top:
+        0;
 
       overflow-x:
         auto;
@@ -518,10 +549,27 @@
         100%;
 
       border-collapse:
-        collapse;
+        separate;
+
+      border-spacing:
+        0;
 
       min-width:
         560px;
+
+      overflow:
+        hidden;
+
+      border:
+        1px solid
+        #dce3ed;
+
+      border-radius:
+        12px;
+
+      box-shadow:
+        0 3px 10px
+        rgba(20,45,90,.06);
     }
 
 
@@ -530,9 +578,9 @@
       padding:
         12px 14px;
 
-      border:
+      border-bottom:
         1px solid
-        #e1e6ee;
+        #e5eaf1;
 
       text-align:
         left;
@@ -548,21 +596,59 @@
 
       font-size:
         13px;
+
+      font-weight:
+        800;
     }
 
 
     .nutrition-table td {
       background:
-        white;
+        #ffffff;
 
       font-size:
         14px;
     }
 
 
+    .nutrition-table tbody tr:nth-child(even) td {
+      background:
+        #f7f9fc;
+    }
+
+
+    .nutrition-table tbody tr:last-child td {
+      border-bottom:
+        none;
+    }
+
+
     .nutrition-table td:first-child {
       font-weight:
         700;
+
+      color:
+        #24324a;
+    }
+
+
+    .nutrition-table td:not(:first-child) {
+      font-weight:
+        600;
+
+      text-align:
+        center;
+    }
+
+
+    /* Nilai ENERGI dibuat lebih menonjol, label tetap sama ukurannya */
+
+    .nutrition-table tbody tr:first-child td:not(:first-child) {
+      font-size:
+        18px;
+
+      font-weight:
+        800;
     }
 
 
@@ -1194,12 +1280,14 @@
 
           <!-- NUTRISI -->
 
-          <h3 class="sub-title">
-            INFORMASI NILAI GIZI
-          </h3>
+          <div class="nutrition-section">
+
+            <h3 class="sub-title">
+              KANDUNGAN GIZI PER PORSI
+            </h3>
 
 
-          <div class="nutrition-wrap">
+            <div class="nutrition-wrap">
 
             <table class="nutrition-table">
 
@@ -1309,6 +1397,8 @@
               </tbody>
 
             </table>
+
+            </div>
 
           </div>
 
