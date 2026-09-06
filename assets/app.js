@@ -1,1060 +1,311 @@
-/* =========================================================
-   SPPG POLRES BREBES KOTABARU
-   APP.JS - VERSI TERBARU
-========================================================= */
-
-const SUPABASE_URL = window.SUPABASE_URL;
-const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY;
-
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error("Konfigurasi Supabase tidak ditemukan.");
-}
-
-const supabaseClient =
-  window.supabase &&
-  SUPABASE_URL &&
-  SUPABASE_ANON_KEY
-    ? window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-      )
-    : null;
-
-
-/* =========================================================
-   LABEL HARI
-========================================================= */
-
-const labels = [
-  "Minggu",
-  "Senin",
-  "Selasa",
-  "Rabu",
-  "Kamis",
-  "Jumat",
-  "Sabtu"
-];
-
-
-/* =========================================================
-   LABEL BULAN
-========================================================= */
+const labels = {
+  0: "Minggu",
+  1: "Senin",
+  2: "Selasa",
+  3: "Rabu",
+  4: "Kamis",
+  5: "Jumat",
+  6: "Sabtu"
+};
 
 const months = [
-  "Januari",
-  "Februari",
-  "Maret",
-  "April",
-  "Mei",
-  "Juni",
-  "Juli",
-  "Agustus",
-  "September",
-  "Oktober",
-  "November",
-  "Desember"
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember"
 ];
 
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function esc(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+if (
+  !window.SUPABASE_URL ||
+  window.SUPABASE_URL.startsWith("PASTE_")
+) {
+  document.getElementById("emptyState").style.display = "block";
+  document.getElementById("emptyText").textContent =
+    "Konfigurasi Supabase belum diisi. Silakan ikuti README.";
+  throw new Error("Supabase config belum diisi.");
 }
 
+const sb = window.supabase.createClient(
+  window.SUPABASE_URL,
+  window.SUPABASE_ANON_KEY
+);
 
-/* =========================================================
-   FORMAT TANGGAL
-========================================================= */
-
-function parseISO(iso) {
-  const [year, month, day] =
-    iso.split("-").map(Number);
-
-  return new Date(
-    year,
-    month - 1,
-    day
-  );
-}
-
-
-function toISO(date) {
-  const year = date.getFullYear();
-
-  const month = String(
-    date.getMonth() + 1
-  ).padStart(2, "0");
-
-  const day = String(
-    date.getDate()
-  ).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
-
-
-/* =========================================================
-   TANGGAL HARI INI - WIB
-========================================================= */
+/* =========================================
+   TANGGAL HARI INI - WIB / ASIA JAKARTA
+   ========================================= */
 
 function todayWIB() {
-  const now = new Date();
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(new Date());
 
-  const formatter = new Intl.DateTimeFormat(
-    "en-CA",
-    {
-      timeZone: "Asia/Jakarta",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    }
+  const get = type => parts.find(p => p.type === type)?.value;
+
+  return `${get("year")}-${get("month")}-${get("day")}`;
+}
+
+/* =========================================
+   TANGGAL YANG DITAMPILKAN
+   ========================================= */
+
+const params = new URLSearchParams(location.search);
+
+let selectedDate =
+  /^\d{4}-\d{2}-\d{2}$/.test(params.get("date") || "")
+    ? params.get("date")
+    : todayWIB();
+
+/* =========================================
+   FUNGSI TANGGAL
+   ========================================= */
+
+function toISO(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function parseISO(s) {
+  const [a, b, c] = s.split("-").map(Number);
+  return new Date(a, b - 1, c);
+}
+
+function mondayOf(s) {
+  const d = parseISO(s);
+  const day = d.getDay();
+
+  d.setDate(
+    d.getDate() + (day === 0 ? -6 : 1 - day)
   );
 
-  return formatter.format(now);
+  return d;
 }
 
+function fmtDate(s) {
+  const d = parseISO(s);
 
-/* =========================================================
-   CEK SABTU / MINGGU
-========================================================= */
-
-function isWeekend(dateString) {
-  const date = parseISO(dateString);
-  const day = date.getDay();
-
-  return day === 0 || day === 6;
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-
-/* =========================================================
-   NAMA HARI
-========================================================= */
-
-function getDayName(dateString) {
-  const date = parseISO(dateString);
-
-  return labels[date.getDay()];
-}
-
-
-/* =========================================================
-   TANGGAL TAMPILAN
-========================================================= */
-
-function formatDisplayDate(dateString) {
-  const date = parseISO(dateString);
-
-  return `${date.getDate()} ${
-    months[date.getMonth()]
-  } ${date.getFullYear()}`;
-}
-
-
-/* =========================================================
-   MENU TANGGAL
-========================================================= */
-
-function getCurrentMenuDates() {
-
-  const today = parseISO(todayWIB());
-  const day = today.getDay();
-  const dates = [];
-
-
-  /* =======================================================
-     HP
-     Bisa geser ke tanggal sebelumnya dan berikutnya
-  ======================================================= */
-
-  if (window.innerWidth <= 700) {
-
-    for (let i = -6; i <= 12; i++) {
-
-      const date = new Date(today);
-
-      date.setDate(
-        today.getDate() + i
-      );
-
-      dates.push(
-        toISO(date)
-      );
-    }
-
-    return dates;
-  }
-
-
-  /* =======================================================
-     LAPTOP / DESKTOP
-     LOGIKA ASLI
-  ======================================================= */
-
-  if (day === 0) {
-
-    for (let i = 0; i <= 5; i++) {
-
-      const date = new Date(today);
-
-      date.setDate(
-        today.getDate() + i
-      );
-
-      dates.push(
-        toISO(date)
-      );
-    }
-
-    return dates;
-  }
-
-
-  if (day >= 1 && day <= 5) {
-
-    const daysUntilFriday =
-      5 - day;
-
-    for (
-      let i = 0;
-      i <= daysUntilFriday;
-      i++
-    ) {
-
-      const date = new Date(today);
-
-      date.setDate(
-        today.getDate() + i
-      );
-
-      dates.push(
-        toISO(date)
-      );
-    }
-
-    return dates;
-  }
-
-
-  const monday = new Date(today);
-
-  monday.setDate(
-    today.getDate() + 2
+function setURL() {
+  history.replaceState(
+    null,
+    "",
+    `?date=${selectedDate}`
   );
-
-
-  for (let i = 0; i < 5; i++) {
-
-    const date = new Date(monday);
-
-    date.setDate(
-      monday.getDate() + i
-    );
-
-    dates.push(
-      toISO(date)
-    );
-  }
-
-  return dates;
 }
 
+function esc(v) {
+  return String(v ?? "").replace(
+    /[&<>"']/g,
+    c => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[c])
+  );
+}
 
-/* =========================================================
-   LOAD MENU MINGGUAN
-========================================================= */
+/* =========================================
+   MENU MINGGUAN
+   ========================================= */
 
 async function loadWeek() {
+  const start = mondayOf(selectedDate);
+  const dates = [];
 
-  const weeklyButtons =
-    document.getElementById(
-      "weeklyButtons"
-    );
+  for (let i = 0; i < 5; i++) {
+    const d = new Date(start);
 
-  if (!weeklyButtons) {
-    return;
+    d.setDate(start.getDate() + i);
+
+    dates.push(toISO(d));
   }
 
+  const { data, error } = await sb
+    .from("menus")
+    .select("menu_date")
+    .in("menu_date", dates);
 
-  const dates =
-    getCurrentMenuDates();
-
-  const today =
-    todayWIB();
-
-
-  weeklyButtons.innerHTML =
-    dates
-      .map(dateString => {
-
-        const date =
-          parseISO(dateString);
-
-        const active =
-          dateString === today
-            ? " active"
-            : "";
-
-        return `
-          <button
-            class="day-button${active}"
-            type="button"
-            data-date="${dateString}"
-          >
-            <strong>
-              ${labels[date.getDay()]}
-            </strong>
-
-            <span class="date-number">
-              ${date.getDate()}
-            </span>
-          </button>
-        `;
-      })
-      .join("");
-
-
-  /* =======================================================
-     EVENT TOMBOL TANGGAL
-  ======================================================= */
-
-  weeklyButtons
-    .querySelectorAll(
-      ".day-button"
-    )
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        async () => {
-
-          const selectedDate =
-            button.dataset.date;
-
-          weeklyButtons
-            .querySelectorAll(
-              ".day-button"
-            )
-            .forEach(btn =>
-              btn.classList.remove(
-                "active"
-              )
-            );
-
-          button.classList.add(
-            "active"
-          );
-
-          await loadMenu(
-            selectedDate
-          );
-        }
-      );
-    });
-
-
-  /* =======================================================
-     HP
-     POSISIKAN HARI INI
-  ======================================================= */
-
-  if (
-    window.innerWidth <= 700
-  ) {
-
-    const activeButton =
-      weeklyButtons.querySelector(
-        ".day-button.active"
-      );
-
-    if (activeButton) {
-
-      weeklyButtons.scrollLeft =
-        activeButton.offsetLeft;
-    }
-  }
-}
-
-
-/* =========================================================
-   LOAD MENU
-========================================================= */
-
-async function loadMenu(
-  dateString = todayWIB()
-) {
-
-  const dayName =
-    document.getElementById(
-      "dayName"
-    );
-
-  const displayDate =
-    document.getElementById(
-      "displayDate"
-    );
-
-
-  /* =======================================================
-     TAMPILKAN HARI & TANGGAL
-  ======================================================= */
-
-  if (dayName) {
-
-    dayName.textContent =
-      getDayName(dateString);
-  }
-
-
-  if (displayDate) {
-
-    displayDate.textContent =
-      formatDisplayDate(
-        dateString
-      );
-  }
-
-
-  /* =======================================================
-     SABTU / MINGGU = OFF
-  ======================================================= */
-
-  if (isWeekend(dateString)) {
-
-    renderWeekendOff(
-      dateString
-    );
-
-    return;
-  }
-
-
-  /* =======================================================
-     CEK SUPABASE
-  ======================================================= */
-
-  if (!supabaseClient) {
-
-    renderEmptyMenu(
-      "Koneksi database tidak tersedia."
-    );
-
-    return;
-  }
-
-
-  try {
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("menus")
-        .select("*")
-        .eq(
-          "menu_date",
-          dateString
-        )
-        .maybeSingle();
-
-
-    if (error) {
-
-      console.error(
-        "Gagal mengambil menu:",
-        error
-      );
-
-      renderEmptyMenu(
-        "Menu belum tersedia."
-      );
-
-      return;
-    }
-
-
-    /* =====================================================
-       TIDAK ADA DATA
-    ===================================================== */
-
-    if (!data) {
-
-      renderEmptyMenu(
-        "Menu belum tersedia."
-      );
-
-      return;
-    }
-
-
-    /* =====================================================
-       RENDER MENU
-    ===================================================== */
-
-    renderMenu(data);
-
-  } catch (error) {
-
+  if (error) {
     console.error(error);
-
-    renderEmptyMenu(
-      "Terjadi kesalahan saat mengambil menu."
-    );
-  }
-}
-
-
-/* =========================================================
-   RENDER MENU
-========================================================= */
-
-function renderMenu(menu) {
-
-  /* =======================================================
-     FOTO MENU
-  ======================================================= */
-
-  const menuPhoto =
-    document.getElementById(
-      "menuPhoto"
-    );
-
-  if (menuPhoto) {
-
-    if (menu.photo_url) {
-
-      menuPhoto.src =
-        menu.photo_url;
-
-      menuPhoto.style.display =
-        "block";
-
-    } else {
-
-      menuPhoto.removeAttribute(
-        "src"
-      );
-
-      menuPhoto.style.display =
-        "none";
-    }
   }
 
-
-  /* =======================================================
-     JUDUL MENU
-  ======================================================= */
-
-  const menuTitle =
-    document.getElementById(
-      "menuTitle"
-    );
-
-  if (menuTitle) {
-
-    menuTitle.textContent =
-      menu.menu_title || "";
-  }
-
-
-  /* =======================================================
-     DESKRIPSI
-  ======================================================= */
-
-  const menuDescription =
-    document.getElementById(
-      "menuDescription"
-    );
-
-  if (menuDescription) {
-
-    menuDescription.textContent =
-      menu.menu_description || "";
-  }
-
-
-  /* =======================================================
-     ISI OMPRENG
-  ======================================================= */
-
-  const foodFields = [
-    [
-      "carbohydrate",
-      menu.carbohydrate
-    ],
-    [
-      "animal_protein",
-      menu.animal_protein
-    ],
-    [
-      "plant_protein",
-      menu.plant_protein
-    ],
-    [
-      "vegetable",
-      menu.vegetable
-    ],
-    [
-      "fruit",
-      menu.fruit
-    ]
-  ];
-
-
-  foodFields.forEach(
-    ([id, value]) => {
-
-      const element =
-        document.getElementById(id);
-
-      if (!element) {
-        return;
-      }
-
-      element.textContent =
-        value || "-";
-    }
+  const have = new Set(
+    (data || []).map(x => x.menu_date)
   );
 
+  document.getElementById("weeklyButtons").innerHTML =
+    dates.map(iso => {
+      const d = parseISO(iso);
+      const active =
+        iso === selectedDate ? " active" : "";
 
-  /* =======================================================
-     WAJIB DIPERHATIKAN
-  ======================================================= */
+      const exists =
+        have.has(iso) ? " has-menu" : "";
 
-  const warningText =
-    document.getElementById(
-      "warningText"
-    );
+      return `
+        <button
+          class="day-button${active}${exists}"
+          type="button"
+          data-date="${iso}"
+        >
+          <strong>${labels[d.getDay()]}</strong>
+          <span>${d.getDate()}</span>
+        </button>
+      `;
+    }).join("");
 
-  if (warningText) {
-
-    warningText.textContent =
-      menu.warning || "";
-  }
-
-
-  /* =======================================================
-     GIZI PER PORSI
-  ======================================================= */
-
-  const nutritionRows =
-    document.getElementById(
-      "nutritionRows"
-    );
-
-
-  if (nutritionRows) {
-
-    const rows = [
-
-      [
-        "Energi",
-        "kkal",
-        "energy_small",
-        "energy_large"
-      ],
-
-      [
-        "Protein",
-        "gram",
-        "protein_small",
-        "protein_large"
-      ],
-
-      [
-        "Lemak",
-        "gram",
-        "fat_small",
-        "fat_large"
-      ],
-
-      [
-        "Karbohidrat",
-        "gram",
-        "carb_small",
-        "carb_large"
-      ],
-
-      [
-        "Serat",
-        "gram",
-        "fiber_small",
-        "fiber_large"
-      ]
-
-    ];
-
-
-    nutritionRows.innerHTML =
-      rows
-        .map(row => {
-
-          return `
-            <tr>
-
-              <td>
-                <strong>
-                  ${esc(row[0])}
-                </strong>
-
-                <br>
-
-                <small>
-                  (${esc(row[1])})
-                </small>
-              </td>
-
-              <td>
-                ${esc(
-                  menu[row[2]] ?? "-"
-                )}
-              </td>
-
-              <td>
-                ${esc(
-                  menu[row[3]] ?? "-"
-                )}
-              </td>
-
-            </tr>
-          `;
-        })
-        .join("");
-  }
-
-
-  /* =======================================================
-     TAMPILKAN KEMBALI ELEMEN MENU
-  ======================================================= */
-
-  const mainMenu =
-    document.querySelector(
-      ".menu-card"
-    );
-
-  const nutritionSection =
-    document.querySelector(
-      ".nutrition-section"
-    );
-
-  const warningBox =
-    document.querySelector(
-      ".warning-box"
-    );
-
-  const emptyState =
-    document.getElementById(
-      "emptyState"
-    );
-
-
-  if (mainMenu) {
-    mainMenu.style.display = "";
-  }
-
-  if (nutritionSection) {
-    nutritionSection.style.display = "";
-  }
-
-  if (warningBox) {
-    warningBox.style.display = "";
-  }
-
-  if (emptyState) {
-    emptyState.style.display = "none";
-  }
+  document
+    .querySelectorAll(".day-button")
+    .forEach(button => {
+      button.onclick = () => {
+        selectedDate = button.dataset.date;
+        setURL();
+        render();
+      };
+    });
 }
 
+/* =========================================
+   MENU TANGGAL TERPILIH
+   ========================================= */
 
-/* =========================================================
-   SABTU / MINGGU = OFF
-========================================================= */
+async function loadMenu() {
+  const d = parseISO(selectedDate);
 
-function renderWeekendOff(dateString) {
+  document.getElementById("dayName").textContent =
+    labels[d.getDay()];
 
-  const mainMenu =
-    document.querySelector(
-      ".menu-card"
+  document.getElementById("displayDate").textContent =
+    fmtDate(selectedDate);
+
+  document.getElementById("photoCaption").textContent =
+    `MENU ${labels[d.getDay()].toUpperCase()}`;
+
+  const { data: m, error } = await sb
+    .from("menus")
+    .select("*")
+    .eq("menu_date", selectedDate)
+    .maybeSingle();
+
+  if (error) {
+    console.error(error);
+    showEmpty(
+      "Gagal mengambil data menu. Periksa konfigurasi Supabase dan RLS."
     );
-
-  const nutritionSection =
-    document.querySelector(
-      ".nutrition-section"
-    );
-
-  const warningBox =
-    document.querySelector(
-      ".warning-box"
-    );
-
-  const emptyState =
-    document.getElementById(
-      "emptyState"
-    );
-
-
-  /* =======================================================
-     SEMBUNYIKAN MENU
-  ======================================================= */
-
-  if (mainMenu) {
-    mainMenu.style.display = "none";
+    return;
   }
 
-  if (nutritionSection) {
-    nutritionSection.style.display = "none";
+  const img = document.getElementById("menuPhoto");
+  const ph = document.getElementById("photoPlaceholder");
+
+  if (m?.photo_url) {
+    img.src = m.photo_url;
+    img.alt = `Foto menu ${fmtDate(selectedDate)}`;
+    img.style.display = "block";
+    ph.style.display = "none";
+  } else {
+    img.style.display = "none";
+    ph.style.display = "block";
   }
 
-  if (warningBox) {
-    warningBox.style.display = "none";
+  if (!m) {
+    showEmpty(
+      `Data menu untuk tanggal ${fmtDate(selectedDate)} belum dimasukkan oleh Admin.`
+    );
+    return;
   }
 
+  document.getElementById("emptyState").style.display = "none";
+  document.getElementById("menuContent").style.display = "block";
 
-  /* =======================================================
-     TAMPILKAN OFF
-  ======================================================= */
+  document.getElementById("menuTitle").textContent =
+    m.menu_title || "Paket Makan Bergizi Gratis";
 
-  if (emptyState) {
+  document.getElementById("menuDescription").textContent =
+    m.menu_description || "";
 
-    emptyState.innerHTML = `
-      <div
-        style="
-          text-align:center;
-          padding:35px 20px;
-          margin:20px 0;
-          background:#fff5f5;
-          border:1px solid #f1b5b5;
-          border-radius:15px;
-        "
-      >
+  [
+    "carbohydrate",
+    "animal_protein",
+    "plant_protein",
+    "vegetable",
+    "fruit"
+  ].forEach(k => {
+    document.getElementById(k).textContent = m[k] || "";
+  });
 
-        <div
-          style="
-            font-size:38px;
-            margin-bottom:10px;
-          "
-        >
-          🔴
-        </div>
+  const rows = [
+    ["Energi", "energy_small", "energy_large"],
+    ["Protein", "protein_small", "protein_large"],
+    ["Lemak", "fat_small", "fat_large"],
+    ["Karbohidrat", "carb_small", "carb_large"],
+    ["Serat", "fiber_small", "fiber_large"]
+  ];
 
-        <div
-          style="
-            font-size:24px;
-            font-weight:900;
-            color:#c62828;
-            margin-bottom:6px;
-          "
-        >
-          OFF
-        </div>
-
-        <div
-          style="
-            font-size:15px;
-            font-weight:700;
-            color:#555;
-          "
-        >
-          Hari ${esc(
-            getDayName(dateString)
-          )}
-        </div>
-
-        <div
-          style="
-            font-size:13px;
-            color:#777;
-            margin-top:5px;
-          "
-        >
-          Tidak ada pelayanan menu
-          pada hari Sabtu dan Minggu.
-        </div>
-
-      </div>
-    `;
-
-    emptyState.style.display =
-      "block";
-  }
+  document.getElementById("nutritionRows").innerHTML =
+    rows.map(r => `
+      <tr>
+        <td>${esc(r[0])}</td>
+        <td>${esc(m[r[1]])}</td>
+        <td>${esc(m[r[2]])}</td>
+      </tr>
+    `).join("");
 }
 
+/* =========================================
+   TAMPILKAN PESAN KOSONG
+   ========================================= */
 
-/* =========================================================
-   MENU KOSONG
-========================================================= */
-
-function renderEmptyMenu(
-  message = "Menu belum tersedia."
-) {
-
-  const mainMenu =
-    document.querySelector(
-      ".menu-card"
-    );
-
-  const warningBox =
-    document.querySelector(
-      ".warning-box"
-    );
-
-  const nutritionSection =
-    document.querySelector(
-      ".nutrition-section"
-    );
-
-  const emptyState =
-    document.getElementById(
-      "emptyState"
-    );
-
-
-  if (mainMenu) {
-    mainMenu.style.display = "none";
-  }
-
-  if (warningBox) {
-    warningBox.style.display = "none";
-  }
-
-  if (nutritionSection) {
-    nutritionSection.style.display = "none";
-  }
-
-
-  if (emptyState) {
-
-    emptyState.innerHTML = `
-      <div
-        style="
-          text-align:center;
-          padding:30px 20px;
-          margin:20px 0;
-          background:#f8fafc;
-          border:1px solid #e5eaf2;
-          border-radius:15px;
-        "
-      >
-
-        <div
-          style="
-            font-size:17px;
-            font-weight:700;
-            color:#555;
-          "
-        >
-          ${esc(message)}
-        </div>
-
-      </div>
-    `;
-
-    emptyState.style.display =
-      "block";
-  }
+function showEmpty(t) {
+  document.getElementById("menuContent").style.display = "none";
+  document.getElementById("emptyState").style.display = "block";
+  document.getElementById("emptyText").textContent = t;
 }
 
-
-/* =========================================================
-   RENDER AWAL
-========================================================= */
+/* =========================================
+   RENDER
+   ========================================= */
 
 async function render() {
-
-  const today =
-    todayWIB();
-
-
-  /* =======================================================
-     HARI & TANGGAL
-  ======================================================= */
-
-  const dayName =
-    document.getElementById(
-      "dayName"
-    );
-
-  const displayDate =
-    document.getElementById(
-      "displayDate"
-    );
-
-
-  if (dayName) {
-
-    dayName.textContent =
-      getDayName(today);
-  }
-
-
-  if (displayDate) {
-
-    displayDate.textContent =
-      formatDisplayDate(today);
-  }
-
-
-  /* =======================================================
-     MENU HARI INI
-  ======================================================= */
-
-  await loadMenu(today);
-
-
-  /* =======================================================
-     MENU MINGGU INI
-  ======================================================= */
-
   await loadWeek();
+  await loadMenu();
 }
 
+/* =========================================
+   MINGGU SEBELUMNYA
+   ========================================= */
 
-/* =========================================================
-   JALANKAN APLIKASI
-========================================================= */
+document.getElementById("prevWeek").onclick = () => {
+  const d = mondayOf(selectedDate);
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-    render();
-  }
-);
+  d.setDate(d.getDate() - 7);
 
+  selectedDate = toISO(d);
 
-/* =========================================================
-   JIKA UKURAN LAYAR BERUBAH
-   HP <-> LAPTOP
-========================================================= */
+  setURL();
+  render();
+};
 
-let lastMobileState =
-  window.innerWidth <= 700;
+/* =========================================
+   MINGGU BERIKUTNYA
+   ========================================= */
 
+document.getElementById("nextWeek").onclick = () => {
+  const d = mondayOf(selectedDate);
 
-window.addEventListener(
-  "resize",
-  async () => {
+  d.setDate(d.getDate() + 7);
 
-    const currentMobileState =
-      window.innerWidth <= 700;
+  selectedDate = toISO(d);
 
+  setURL();
+  render();
+};
 
-    if (
-      currentMobileState !==
-      lastMobileState
-    ) {
+/* =========================================
+   MULAI
+   ========================================= */
 
-      lastMobileState =
-        currentMobileState;
-
-      await loadWeek();
-    }
-  }
-);
+render();
