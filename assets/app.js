@@ -301,25 +301,18 @@ function renderWeekButtons() {
 
   /* Pusatkan tanggal aktif */
 
-  requestAnimationFrame(() => {
+requestAnimationFrame(() => {
+  const activeButton =
+    weeklyButtons.querySelector(".day-button.active");
 
-    const activeButton =
-      weeklyButtons.querySelector(
-        ".day-button.active"
-      );
-
-
-    if (activeButton) {
-
-      activeButton.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center"
-      });
-
-    }
-
-  });
+  if (activeButton) {
+    activeButton.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center"
+    });
+  }
+});
 
 }
 
