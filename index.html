@@ -457,7 +457,6 @@
        NAVIGASI HARI MINGGUAN
        TANGGAL AKTIF DI TENGAH
     ========================================================= */
-
 .week-nav {
   display: flex;
   align-items: center;
@@ -466,7 +465,7 @@
   box-sizing: border-box;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 10px 50% 16px;
+  padding: 10px 0 16px;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -477,48 +476,46 @@
 }
 
 .week-nav .day-button {
-  flex: 0 0 90px;
-  width: 90px;
-  min-width: 90px;
+  flex: 0 0 auto;
+  box-sizing: border-box;
 }
-    .day-button {
-      height: 100px;
-      border: 1px solid #dce3ed;
-      border-radius: 13px;
-      background: #f8fafc;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      transition: .2s ease;
-      color: #344054;
-    }
 
-    .day-button strong {
-      font-size: 14px;
-    }
+.day-button {
+  height: 100px;
+  border: 1px solid #dce3ed;
+  border-radius: 13px;
+  background: #f8fafc;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: .2s ease;
+  color: #344054;
+}
 
-    .day-button span {
-      font-size: 30px;
-      font-weight: 800;
-      line-height: 1;
-    }
+.day-button strong {
+  font-size: 14px;
+}
 
-    .day-button:hover {
-      border-color: #163f91;
-      transform: translateY(-2px);
-    }
+.day-button span {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+}
 
-    .day-button.active {
-      background: #163f91;
-      color: white;
-      border-color: #163f91;
-      box-shadow:
-        0 6px 16px rgba(22, 63, 145, .25);
-    }
+.day-button:hover {
+  border-color: #163f91;
+  transform: translateY(-2px);
+}
 
+.day-button.active {
+  background: #163f91;
+  color: white;
+  border-color: #163f91;
+  box-shadow: 0 6px 16px rgba(22, 63, 145, .25);
+}
 
     /* =========================================================
        FOOTER
@@ -692,19 +689,13 @@
    MENU MINGGUAN - HP
 ===================================================== */
 
-.weekly-menu {
-  padding: 15px;
-}
-
 .week-nav {
   gap: 8px;
-  padding: 10px 50% 16px;
+  padding: 10px 0 16px;
 }
 
 .week-nav .day-button {
-  flex: 0 0 78px;
-  width: 78px;
-  min-width: 78px;
+  flex: 0 0 auto;
 }
 
 .day-button {
@@ -712,14 +703,14 @@
 }
 
 .day-button strong {
-  font-size: 12px;
+  font-size: 10px;
+  text-align: center;
+  line-height: 1.1;
 }
 
 .day-button span {
-  font-size: 27px;
+  font-size: 25px;
 }
-
-    }
 
   </style>
 </head>
