@@ -379,31 +379,34 @@ async function loadWeek() {
   // POSISIKAN TANGGAL AKTIF DI TENGAH
   // -------------------------------------------------------
 
-  requestAnimationFrame(() => {
+requestAnimationFrame(() => {
 
-    const activeButton =
-      weeklyButtons.querySelector(
-        ".day-button.active"
-      );
+  const activeButton =
+    weeklyButtons.querySelector(
+      ".day-button.active"
+    );
 
+  if (!activeButton) {
+    return;
+  }
 
-    if (!activeButton) {
+  const containerCenter =
+    weeklyButtons.clientWidth / 2;
 
-      return;
+  const buttonCenter =
+    activeButton.offsetLeft +
+    activeButton.offsetWidth / 2;
 
-    }
+  const scrollPosition =
+    buttonCenter -
+    containerCenter;
 
-
-    activeButton.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center"
-    });
-
+  weeklyButtons.scrollTo({
+    left: scrollPosition,
+    behavior: "smooth"
   });
 
-}
-
+});
 
 // =========================================================
 // LOAD MENU
