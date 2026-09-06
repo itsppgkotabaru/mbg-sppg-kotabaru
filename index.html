@@ -410,47 +410,62 @@
        MENU MINGGU INI
     ========================================================= */
 
+/* =========================================================
+   MENU MINGGUAN - HP
+========================================================= */
+
 .weekly-menu {
   padding: 8px 5px;
 }
 
 .week-nav {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: 3px;
   width: 100%;
   overflow: hidden;
   padding: 0;
 }
-.day-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 
-  width: 100%;
+.day-button {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: 100% !important;
   min-width: 0 !important;
-  height: auto;
-  aspect-ratio: 1 / 1;
+  min-height: 0 !important;
+  height: auto !important;
+
+  aspect-ratio: 1 / 1 !important;
 
   padding: 3px 1px;
   gap: 4px;
 
   border-radius: 6px;
+  overflow: hidden;
 }
+
 .day-button strong {
-  font-size: 8px;
-  font-weight: 700;
+  display: block !important;
+  font-size: 8px !important;
+  font-weight: 700 !important;
+  line-height: 1.1 !important;
   white-space: nowrap;
 }
 
 .day-button .date-number {
   display: block !important;
-  font-size: 17px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  color: inherit !important;
+
+  font-size: 20px !important;
   font-weight: 800 !important;
   line-height: 1 !important;
-}
-    /* =========================================================
+  margin: 0 !important;
+}    /* =========================================================
        FOOTER
     ========================================================= */
 
