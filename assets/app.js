@@ -61,6 +61,7 @@ function todayWIB() {
   }).formatToParts(new Date());
 
   const get = (type) => {
+
     const item = parts.find(
       part => part.type === type
     );
@@ -129,14 +130,6 @@ const urlDate =
    TANGGAL AWAL
 ===================================================== */
 
-/*
-   Jika URL memiliki ?date=...
-   gunakan tanggal tersebut.
-
-   Jika tidak ada,
-   gunakan tanggal REAL hari ini WIB.
-*/
-
 let selectedDate =
   urlDate || todayWIB();
 
@@ -175,33 +168,53 @@ function esc(value) {
 
 
 /* =====================================================
-   BUAT TANGGAL MENU MINGGU INI
+   BUAT TANGGAL MENU
 ===================================================== */
 
 /*
-   Aturan:
+   LAPTOP / DESKTOP
+   =================
 
-   Mulai dari HARI INI
-   sampai HARI JUMAT.
+   Tetap menggunakan sistem lama:
 
-   Contoh:
+   Minggu:
+   Minggu - Jumat
 
-   Minggu 6 September
-   =
-   Minggu 6
-   Senin 7
-   Selasa 8
-   Rabu 9
-   Kamis 10
-   Jumat 11
+   Senin:
+   Senin - Jumat
 
-   Senin 7 September
-   =
-   Senin 7
-   Selasa 8
-   Rabu 9
-   Kamis 10
-   Jumat 11
+   Selasa:
+   Selasa - Jumat
+
+   Rabu:
+   Rabu - Jumat
+
+   Kamis:
+   Kamis - Jumat
+
+   Jumat:
+   Jumat
+
+   Sabtu:
+   Senin - Jumat minggu berikutnya
+
+
+   HP / MOBILE
+   ===========
+
+   Menampilkan tanggal:
+
+   6 hari sebelumnya
+   sampai
+   12 hari sesudah hari ini
+
+   Tujuannya agar HP dapat digeser:
+
+   ← ke tanggal sebelumnya
+
+   dan
+
+   → ke tanggal berikutnya
 */
 
 
@@ -215,6 +228,39 @@ function getCurrentMenuDates() {
 
   const dates = [];
 
+
+  /* ===================================================
+     HP / MOBILE
+  =================================================== */
+
+  if (window.innerWidth <= 700) {
+
+    /*
+       6 hari sebelum hari ini
+       sampai 12 hari setelah hari ini
+    */
+
+    for (let i = -6; i <= 12; i++) {
+
+      const date =
+        new Date(today);
+
+      date.setDate(
+        today.getDate() + i
+      );
+
+      dates.push(
+        toISO(date)
+      );
+    }
+
+    return dates;
+  }
+
+
+  /* ===================================================
+     LAPTOP / DESKTOP
+  =================================================== */
 
   /*
      Jika Minggu:
@@ -339,9 +385,9 @@ async function loadWeek() {
   }
 
 
-  /*
-     Tampilkan kartu tanggal
-  */
+  /* ===================================================
+     TAMPILKAN KARTU TANGGAL
+  =================================================== */
 
   weeklyButtons.innerHTML =
     dates
@@ -368,7 +414,7 @@ async function loadWeek() {
               ${labels[date.getDay()]}
             </strong>
 
-            <span>
+            <span class="date-number">
               ${date.getDate()}
             </span>
 
@@ -379,9 +425,9 @@ async function loadWeek() {
       .join("");
 
 
-  /*
-     Event klik
-  */
+  /* ===================================================
+     EVENT KLIK TANGGAL
+  =================================================== */
 
   document
     .querySelectorAll(".day-button")
@@ -425,6 +471,39 @@ async function loadWeek() {
       };
 
     });
+
+
+  /* ===================================================
+     POSISI AWAL HP
+  =================================================== */
+
+  /*
+     Pada HP, setelah semua tanggal dibuat,
+     geser otomatis ke tanggal aktif.
+
+     Jadi tanggal hari ini tetap terlihat
+     saat halaman pertama kali dibuka.
+
+     Tanggal sebelumnya tetap bisa dilihat
+     dengan geser ke kiri.
+
+     Tanggal berikutnya tetap bisa dilihat
+     dengan geser ke kanan.
+  */
+
+  if (window.innerWidth <= 700) {
+
+    const activeButton =
+      weeklyButtons.querySelector(
+        ".day-button.active"
+      );
+
+    if (activeButton) {
+
+      weeklyButtons.scrollLeft =
+        activeButton.offsetLeft;
+    }
+  }
 }
 
 
@@ -438,12 +517,15 @@ async function loadMenu() {
     parseISO(selectedDate);
 
 
-  /* Nama hari */
+  /* ===================================================
+     NAMA HARI
+  =================================================== */
 
   const dayName =
     document.getElementById(
       "dayName"
     );
+
 
   if (dayName) {
 
@@ -453,12 +535,15 @@ async function loadMenu() {
   }
 
 
-  /* Tanggal lengkap */
+  /* ===================================================
+     TANGGAL LENGKAP
+  =================================================== */
 
   const displayDate =
     document.getElementById(
       "displayDate"
     );
+
 
   if (displayDate) {
 
@@ -468,12 +553,15 @@ async function loadMenu() {
   }
 
 
-  /* Caption foto */
+  /* ===================================================
+     CAPTION FOTO
+  =================================================== */
 
   const photoCaption =
     document.getElementById(
       "photoCaption"
     );
+
 
   if (photoCaption) {
 
@@ -483,7 +571,9 @@ async function loadMenu() {
   }
 
 
-  /* Ambil menu */
+  /* ===================================================
+     AMBIL MENU DARI SUPABASE
+  =================================================== */
 
   const {
     data: menu,
@@ -498,7 +588,9 @@ async function loadMenu() {
     .maybeSingle();
 
 
-  /* Error */
+  /* ===================================================
+     ERROR SUPABASE
+  =================================================== */
 
   if (error) {
 
@@ -524,6 +616,7 @@ async function loadMenu() {
     document.getElementById(
       "menuPhoto"
     );
+
 
   const placeholder =
     document.getElementById(
@@ -592,6 +685,7 @@ async function loadMenu() {
       "emptyState"
     );
 
+
   const menuContent =
     document.getElementById(
       "menuContent"
@@ -612,12 +706,15 @@ async function loadMenu() {
   }
 
 
-  /* Judul */
+  /* ===================================================
+     JUDUL
+  =================================================== */
 
   const menuTitle =
     document.getElementById(
       "menuTitle"
     );
+
 
   if (menuTitle) {
 
@@ -627,12 +724,15 @@ async function loadMenu() {
   }
 
 
-  /* Deskripsi */
+  /* ===================================================
+     DESKRIPSI
+  =================================================== */
 
   const menuDescription =
     document.getElementById(
       "menuDescription"
     );
+
 
   if (menuDescription) {
 
@@ -734,7 +834,9 @@ async function loadMenu() {
                 <strong>
                   ${esc(row[0])}
                 </strong>
+
                 <br>
+
                 <small>
                   (${esc(row[1])})
                 </small>
@@ -754,7 +856,10 @@ async function loadMenu() {
         })
         .join("");
   }
+
 }
+
+
 /* =====================================================
    EMPTY STATE
 ===================================================== */
@@ -766,10 +871,12 @@ function showEmpty(text) {
       "menuContent"
     );
 
+
   const emptyState =
     document.getElementById(
       "emptyState"
     );
+
 
   const emptyText =
     document.getElementById(
@@ -806,8 +913,7 @@ function showEmpty(text) {
 async function render() {
 
   /*
-     Penting:
-     setiap kali halaman dimuat,
+     Setiap kali halaman dimuat,
      tanggal menu ditentukan dari
      tanggal REAL WIB.
   */
@@ -828,7 +934,16 @@ async function render() {
   }
 
 
+  /*
+     Load tombol tanggal
+  */
+
   await loadWeek();
+
+
+  /*
+     Load menu hari ini / tanggal terpilih
+  */
 
   await loadMenu();
 }
