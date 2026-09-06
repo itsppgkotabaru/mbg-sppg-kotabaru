@@ -224,6 +224,13 @@ th{
   background:#edf3fc;
   color:var(--blue)
 }
+/* NILAI ENERGI */
+.nutrition-table tbody tr:first-child td:nth-child(2),
+.nutrition-table tbody tr:first-child td:nth-child(3){
+  color:#ff9800 !important;
+  font-size:20px !important;
+  font-weight:800 !important;
+}
 
 /* =========================
    MENU MINGGU INI
