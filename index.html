@@ -585,13 +585,30 @@
     .nutrition-table td:first-child {
       font-weight: 700;
     }
+/* =========================
+   NILAI ENERGI
+========================= */
 
-    /* Nilai ENERGI dibuat lebih menonjol, label tetap sama ukurannya */
-    .nutrition-table tbody tr:first-child td:not(:first-child) {
-      font-size: 18px;
-      font-weight: 800;
-    }
+.nutrition-table tbody tr:first-child td:nth-child(2),
+.nutrition-table tbody tr:first-child td:nth-child(3) {
+  color: #ff9800 !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+}
 
+/* Label Energi */
+.nutrition-table tbody tr:first-child td:first-child strong {
+  font-size: 14px !important;
+  font-weight: 900 !important;
+}
+
+/* Satuan Energi */
+.nutrition-table tbody tr:first-child td:first-child small {
+  display: inline-block;
+  font-size: 10px !important;
+  font-weight: 400 !important;
+  line-height: 1.1;
+}
     /* =========================
        EMPTY STATE
     ========================= */
