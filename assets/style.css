@@ -487,4 +487,11 @@ footer strong{
   .site-header h1{
     font-size:18px
   }
+.nutrition-table tbody tr:first-child td:nth-child(2),
+.nutrition-table tbody tr:first-child td:nth-child(3) {
+  color: #ff9800 !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+}
+
 }
