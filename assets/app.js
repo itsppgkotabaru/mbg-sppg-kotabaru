@@ -219,94 +219,169 @@ function esc(v) {
 // =========================================================
 // MENU MINGGU INI
 // =========================================================
-
 async function loadWeek() {
 
-  // -------------------------------------------------------
-  // TANGGAL REAL-TIME WIB
-  // -------------------------------------------------------
+  // =======================================================
+  // TANGGAL HARI INI BERDASARKAN WIB
+  // =======================================================
 
-  const realToday =
-    todayWIB();
+  const realToday = todayWIB();
 
-  const todayDate =
-    parseISO(realToday);
+  const todayDate = parseISO(realToday);
 
-  const todayDay =
-    todayDate.getDay();
+  const todayDay = todayDate.getDay();
 
 
-  // -------------------------------------------------------
-  // MINGGU KERJA
-  //
-  // MENU MINGGU INI = SENIN - JUMAT
-  // -------------------------------------------------------
+  // =======================================================
+  // MINGGU DITENTUKAN DARI TANGGAL HARI INI
+  // =======================================================
 
-  let weekBase =
-    realToday;
+  const start = mondayOf(realToday);
 
 
-  // -------------------------------------------------------
-  // SABTU / MINGGU
-  //
-  // Jika hari Sabtu atau Minggu,
-  // tampilkan minggu kerja berikutnya.
-  // -------------------------------------------------------
-
-  if (
-    todayDay === 6 ||
-    todayDay === 0
-  ) {
-
-    const nextMonday =
-      new Date(todayDate);
-
-    const daysToMonday =
-      todayDay === 6
-        ? 2
-        : 1;
-
-    nextMonday.setDate(
-      todayDate.getDate() +
-      daysToMonday
-    );
-
-    weekBase =
-      toISO(nextMonday);
-
-  }
-
-
-  const start =
-    mondayOf(weekBase);
-
+  // =======================================================
+  // BUAT 7 HARI
+  // SENIN - MINGGU
+  // =======================================================
 
   const dates = [];
 
+  for (let i = 0; i < 7; i++) {
 
-  // -------------------------------------------------------
-  // SENIN - JUMAT
-  // -------------------------------------------------------
+    const d = new Date(start);
 
-  for (
-    let i = 0;
-    i < 5;
-    i++
-  ) {
+    d.setDate(start.getDate() + i);
 
-    const d =
-      new Date(start);
+    dates.push(toISO(d));
 
-    d.setDate(
-      start.getDate() + i
-    );
+  }
 
-    dates.push(
-      toISO(d)
+
+  // =======================================================
+  // CEK DATA MENU DI SUPABASE
+  // =======================================================
+
+  const {
+    data,
+    error
+  } = await sb
+    .from("menus")
+    .select("menu_date")
+    .in("menu_date", dates);
+
+
+  if (error) {
+
+    console.error(
+      "Gagal mengambil daftar menu:",
+      error
     );
 
   }
 
+
+  // =======================================================
+  // CONTAINER MENU MINGGUAN
+  // =======================================================
+
+  const weeklyButtons =
+    document.getElementById("weeklyButtons");
+
+  if (!weeklyButtons) {
+    return;
+  }
+
+
+  // =======================================================
+  // HARI INI SELALU MENJADI AKTIF
+  // =======================================================
+
+  const activeDate = realToday;
+
+
+  // =======================================================
+  // TAMPILKAN TANGGAL
+  // =======================================================
+
+  weeklyButtons.innerHTML = dates
+    .map(iso => {
+
+      const d = parseISO(iso);
+
+      const active =
+        iso === activeDate
+          ? " active"
+          : "";
+
+
+      return `
+        <button
+          class="day-button${active}"
+          type="button"
+          data-date="${iso}"
+        >
+
+          <strong>
+            ${labels[d.getDay()]}
+          </strong>
+
+          <span class="date-number">
+            ${d.getDate()}
+          </span>
+
+        </button>
+      `;
+
+    })
+    .join("");
+
+
+  // =======================================================
+  // KLIK TANGGAL
+  // =======================================================
+
+  weeklyButtons
+    .querySelectorAll(".day-button")
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        selectedDate =
+          button.dataset.date;
+
+        setURL();
+
+        render();
+
+      };
+
+    });
+
+
+  // =======================================================
+  // TANGGAL AKTIF DI TENGAH
+  // =======================================================
+
+  requestAnimationFrame(() => {
+
+    const activeButton =
+      weeklyButtons.querySelector(
+        ".day-button.active"
+      );
+
+    if (!activeButton) {
+      return;
+    }
+
+    activeButton.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center"
+    });
+
+  });
+
+}
 
   // -------------------------------------------------------
   // CEK DATA MENU DI SUPABASE
