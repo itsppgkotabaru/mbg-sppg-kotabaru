@@ -559,8 +559,30 @@
       }
 
       .food-grid {
-        grid-template-columns: 1fr;
-      }
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+/* Karbohidrat sendiri di paling atas */
+.food-item:first-child {
+  grid-column: 1 / -1;
+}
+
+.food-item {
+  padding: 12px;
+  min-width: 0;
+}
+
+.food-label {
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.food-value {
+  font-size: 14px;
+  line-height: 1.3;
+}
 
       .nutrition-section {
         padding: 12px;
