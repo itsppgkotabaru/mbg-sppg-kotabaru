@@ -679,30 +679,35 @@ async function loadMenu() {
 
     [
       "Energi",
+      "kkal",
       "energy_small",
       "energy_large"
     ],
 
     [
       "Protein",
+      "gram",
       "protein_small",
       "protein_large"
     ],
 
     [
       "Lemak",
+      "gram",
       "fat_small",
       "fat_large"
     ],
 
     [
       "Karbohidrat",
+      "gram",
       "carb_small",
       "carb_large"
     ],
 
     [
       "Serat",
+      "gram",
       "fiber_small",
       "fiber_large"
     ]
@@ -726,15 +731,21 @@ async function loadMenu() {
             <tr>
 
               <td>
-                ${esc(row[0])}
+                <strong>
+                  ${esc(row[0])}
+                </strong>
+                <br>
+                <small>
+                  (${esc(row[1])})
+                </small>
               </td>
 
               <td>
-                ${esc(menu[row[1]])}
+                ${esc(menu[row[2]] ?? "-")}
               </td>
 
               <td>
-                ${esc(menu[row[2]])}
+                ${esc(menu[row[3]] ?? "-")}
               </td>
 
             </tr>
@@ -743,8 +754,6 @@ async function loadMenu() {
         })
         .join("");
   }
-}
-
 
 /* =====================================================
    EMPTY STATE
