@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -58,17 +59,41 @@
       gap: 16px;
     }
 
+
     /* =========================================================
        LOGO HEADER
        URUTAN: BGN - SLHS - HALAL
     ========================================================= */
 
     .logo-group {
+      position: relative;
       display: flex;
       align-items: center;
       gap: 6px;
       flex-shrink: 0;
+
+      /* Ruang untuk garis pemisah */
+      padding-right: 16px;
+      margin-right: 0;
     }
+
+
+    /* =========================================================
+       GARIS PEMISAH LOGO DAN NAMA SPPG
+    ========================================================= */
+
+    .logo-group::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 50%;
+      width: 2px;
+      height: 40px;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, .65);
+      border-radius: 2px;
+    }
+
 
     .logo,
     .logo-slhs,
@@ -100,6 +125,15 @@
 
     .logo img {
       border-radius: 50%;
+    }
+
+
+    /* =========================================================
+       TEKS HEADER
+    ========================================================= */
+
+    .header-text {
+      min-width: 0;
     }
 
     .header-text h1 {
@@ -323,7 +357,7 @@
 
 
     /* =========================================================
-      KANDUNGAN GIZI PER PORSI
+       KANDUNGAN GIZI PER PORSI
     ========================================================= */
 
     .nutrition-section {
@@ -479,65 +513,68 @@
        NAVIGASI HARI MINGGUAN
        TANGGAL AKTIF DI TENGAH
     ========================================================= */
-.week-nav {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 10px 0 16px;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
 
-.week-nav::-webkit-scrollbar {
-  display: none;
-}
+    .week-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      box-sizing: border-box;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 10px 0 16px;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
 
-.week-nav .day-button {
-  flex: 0 0 auto;
-  box-sizing: border-box;
-}
+    .week-nav::-webkit-scrollbar {
+      display: none;
+    }
 
-.day-button {
-  height: 100px;
-  border: 1px solid #dce3ed;
-  border-radius: 13px;
-  background: #f8fafc;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  transition: .2s ease;
-  color: #344054;
-}
+    .week-nav .day-button {
+      flex: 0 0 auto;
+      box-sizing: border-box;
+    }
 
-.day-button strong {
-  font-size: 14px;
-}
+    .day-button {
+      height: 100px;
+      border: 1px solid #dce3ed;
+      border-radius: 13px;
+      background: #f8fafc;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: .2s ease;
+      color: #344054;
+    }
 
-.day-button span {
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1;
-}
+    .day-button strong {
+      font-size: 14px;
+    }
 
-.day-button:hover {
-  border-color: #163f91;
-  transform: translateY(-2px);
-}
+    .day-button span {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1;
+    }
 
-.day-button.active {
-  background: #163f91;
-  color: white;
-  border-color: #163f91;
-  box-shadow: 0 6px 16px rgba(22, 63, 145, .25);
-}
+    .day-button:hover {
+      border-color: #163f91;
+      transform: translateY(-2px);
+    }
+
+    .day-button.active {
+      background: #163f91;
+      color: white;
+      border-color: #163f91;
+      box-shadow:
+        0 6px 16px rgba(22, 63, 145, .25);
+    }
+
 
     /* =========================================================
        FOOTER
@@ -577,9 +614,21 @@
         gap: 11px;
       }
 
-      /* LOGO HEADER - HP */
+
+      /* =====================================================
+         LOGO HEADER - HP
+      ===================================================== */
+
       .logo-group {
         gap: 4px;
+        padding-right: 10px;
+        margin-right: 0;
+      }
+
+      .logo-group::after {
+        top: 50%;
+        height: 34px;
+        width: 2px;
       }
 
       .logo,
@@ -592,6 +641,11 @@
       .logo {
         padding: 2px;
       }
+
+
+      /* =====================================================
+         TEKS HEADER - HP
+      ===================================================== */
 
       .header-text h1 {
         font-size: 13px;
@@ -606,6 +660,11 @@
         font-size: 11px;
       }
 
+
+      /* =====================================================
+         HARI DAN TANGGAL - HP
+      ===================================================== */
+
       .day-date-header {
         margin: 14px auto 12px;
         padding: 0 10px 10px;
@@ -618,6 +677,11 @@
       .day-date-header .display-date {
         font-size: 14px;
       }
+
+
+      /* =====================================================
+         MAIN - HP
+      ===================================================== */
 
       main {
         margin-top: 18px;
@@ -718,32 +782,34 @@
       }
 
 
-/* =====================================================
-   MENU MINGGUAN - HP
-===================================================== */
+      /* =====================================================
+         MENU MINGGUAN - HP
+      ===================================================== */
 
-.week-nav {
-  gap: 8px;
-  padding: 10px 0 16px;
-}
+      .week-nav {
+        gap: 8px;
+        padding: 10px 0 16px;
+      }
 
-.week-nav .day-button {
-  flex: 0 0 auto;
-}
+      .week-nav .day-button {
+        flex: 0 0 auto;
+      }
 
-.day-button {
-  height: 90px;
-}
+      .day-button {
+        height: 90px;
+      }
 
-.day-button strong {
-  font-size: 10px;
-  text-align: center;
-  line-height: 1.1;
-}
+      .day-button strong {
+        font-size: 10px;
+        text-align: center;
+        line-height: 1.1;
+      }
 
-.day-button span {
-  font-size: 25px;
-}
+      .day-button span {
+        font-size: 25px;
+      }
+
+    }
 
   </style>
 </head>
@@ -757,37 +823,42 @@
 
   <header>
 
-    <div class="logo-group">
+    <div class="header-inner">
 
-  <!-- LOGO BGN -->
-  <div class="logo">
-    <img
-      src="assets/logo-bgn.png"
-      alt="Logo Badan Gizi Nasional"
-    >
-  </div>
+      <div class="logo-group">
 
-  <!-- LOGO SLHS -->
-  <div class="logo-slhs">
-    <img
-      src="assets/logo-slhs.png"
-      alt="Logo Sertifikat Laik Higiene Sanitasi"
-    >
-  </div>
+        <!-- LOGO BGN -->
+        <div class="logo">
+          <img
+            src="assets/logo-bgn.png"
+            alt="Logo Badan Gizi Nasional"
+          >
+        </div>
 
-  <!-- LOGO HALAL -->
-  <div class="logo-halal">
-    <img
-      src="assets/logo-halal.png"
-      alt="Logo Halal Indonesia"
-    >
-  </div>
+        <!-- LOGO SLHS -->
+        <div class="logo-slhs">
+          <img
+            src="assets/logo-slhs.png"
+            alt="Logo Sertifikat Laik Higiene Sanitasi"
+          >
+        </div>
 
-</div>
+        <!-- LOGO HALAL -->
+        <div class="logo-halal">
+          <img
+            src="assets/logo-halal.png"
+            alt="Logo Halal Indonesia"
+          >
+        </div>
+
+      </div>
+
+
+      <!-- NAMA SPPG -->
       <div class="header-text">
 
         <h2>
-          SPPG POLRES BREBES KOTABARU
+          SPPG POLRES BREBES
         </h2>
 
         <p>
@@ -1141,7 +1212,7 @@
   <footer>
 
     <strong>
-      SPPG POLRES BREBES KOTABARU
+      SPPG POLRES BREBES
     </strong>
 
     <span>
@@ -1164,3 +1235,4 @@
 </body>
 
 </html>
+```
