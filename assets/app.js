@@ -141,7 +141,7 @@ function updateDayDate() {
 
 /* =========================================================
    ATUR LEBAR KOTAK HARI
-   TEPAT 7 KOTAK TERLIHAT
+   7 KOTAK SENIN - MINGGU
 ========================================================= */
 
 function resizeDateButtons() {
@@ -199,22 +199,33 @@ function renderWeekButtons() {
   const centerDate =
     parseISO(selectedDate);
 
-  const dates = [];
-
   /*
-     30 hari sebelum
-     sampai
-     30 hari sesudah.
-
-     Total 61 tanggal.
+     MENU MINGGU INI = SENIN SAMPAI MINGGU
+     Tepat 7 tanggal berdasarkan minggu dari selectedDate.
   */
 
-  for (let i = -30; i <= 30; i++) {
+  const day = centerDate.getDay(); // Minggu=0, Senin=1, ..., Sabtu=6
+
+  // Menentukan tanggal Senin pada minggu yang sedang dipilih
+  const diffToMonday =
+    day === 0 ? -6 : 1 - day;
+
+  const monday =
+    new Date(centerDate);
+
+  monday.setDate(
+    centerDate.getDate() + diffToMonday
+  );
+
+  const dates = [];
+
+  // Senin sampai Minggu = 7 hari
+  for (let i = 0; i < 7; i++) {
     const d =
-      new Date(centerDate);
+      new Date(monday);
 
     d.setDate(
-      centerDate.getDate() + i
+      monday.getDate() + i
     );
 
     dates.push(
@@ -249,7 +260,6 @@ function renderWeekButtons() {
       `;
     }).join("");
 
-
   /*
      Klik tanggal
   */
@@ -263,54 +273,52 @@ function renderWeekButtons() {
         function() {
 
           selectedDate =
-  this.dataset.date;
+            this.dataset.date;
 
-setURL();
+          setURL();
 
-updateDayDate();
+          updateDayDate();
 
-renderWeekButtons();
+          renderWeekButtons();
 
-loadMenu();
+          loadMenu();
 
-scrollToMenuTop();
+          scrollToMenuTop();
         }
       );
 
     });
 
-
   /*
-     Atur ukuran agar tepat 7 kotak
+     Atur ukuran kotak.
+     Tidak mengubah CSS atau aturan tampilan HP.
   */
 
-requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
 
-  resizeDateButtons();
+    resizeDateButtons();
 
-  const activeButton =
-    weeklyButtons.querySelector(
-      ".day-button.active"
-    );
+    const activeButton =
+      weeklyButtons.querySelector(
+        ".day-button.active"
+      );
 
-  if (activeButton) {
+    if (activeButton) {
 
-    const containerCenter =
-      weeklyButtons.clientWidth / 2;
+      const containerCenter =
+        weeklyButtons.clientWidth / 2;
 
-    const buttonCenter =
-      activeButton.offsetLeft +
-      activeButton.offsetWidth / 2;
+      const buttonCenter =
+        activeButton.offsetLeft +
+        activeButton.offsetWidth / 2;
 
-    weeklyButtons.scrollLeft =
-      buttonCenter - containerCenter;
+      weeklyButtons.scrollLeft =
+        buttonCenter - containerCenter;
 
-  }
+    }
 
-});
+  });
 }
-
-
 /* =========================================================
    SUPABASE
 ========================================================= */
