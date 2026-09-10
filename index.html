@@ -1126,27 +1126,18 @@
 }
 
 
-/* FOTO DESKTOP LEBIH ZOOM OUT — HP TIDAK DIUBAH */
-@media (min-width: 701px) {
-  #menuPhoto {
-    max-height: 520px !important;
-    object-fit: contain !important;
-  }
-}
-
-
 /* =========================================================
-   FOTO DESKTOP — TAMPIL UTUH, TIDAK TERPOTONG
-   HANYA DESKTOP | TAMPILAN HP TIDAK DIUBAH
+   FOTO DESKTOP — OTOMATIS MENGIKUTI RASIO FOTO ASLI
+   HANYA DESKTOP — TAMPILAN HP TIDAK DIUBAH
 ========================================================= */
 @media (min-width: 701px) {
   #menuPhoto {
     display: block !important;
     width: 100% !important;
     height: auto !important;
-    max-height: 520px !important;
-    object-fit: contain !important;
-    object-position: center center !important;
+    max-height: none !important;
+    object-fit: initial !important;
+    object-position: center !important;
   }
 }
 
