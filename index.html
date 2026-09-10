@@ -815,18 +815,130 @@
 
     /* =========================================================
        DESKTOP / LAPTOP
-       Hanya memperlebar area tampilan.
-       Tampilan HP tetap mengikuti @media max-width: 700px di atas.
+       Hanya mengubah tampilan komputer/laptop.
+       Tampilan HP di @media max-width: 700px tetap sama.
     ========================================================= */
 
     @media (min-width: 701px) {
-      .header-inner,
-      .day-date-header,
-      main {
-        max-width: 1400px;
+
+      header {
+        padding: 30px 32px;
       }
 
-      /* Tanggal mingguan bisa digeser di komputer/laptop */
+      .header-inner {
+        max-width: 1600px;
+        width: 100%;
+      }
+
+      .logo,
+      .logo-slhs,
+      .logo-halal {
+        width: 58px;
+        height: 58px;
+      }
+
+      .logo-group {
+        gap: 8px;
+        padding-right: 20px;
+      }
+
+      .logo-group::after {
+        height: 48px;
+      }
+
+      .header-text h1 {
+        font-size: 19px;
+      }
+
+      .header-text h2 {
+        font-size: 28px;
+      }
+
+      .header-text p {
+        font-size: 15px;
+      }
+
+      .day-date-header {
+        max-width: 1600px;
+        padding: 0 24px 15px;
+        margin: 24px auto 20px;
+      }
+
+      .day-date-header .day-name {
+        font-size: 36px;
+      }
+
+      .day-date-header .display-date {
+        font-size: 18px;
+      }
+
+      main {
+        max-width: 1600px;
+        width: 100%;
+        padding: 0 32px;
+        margin: 32px auto 60px;
+      }
+
+      .menu-card {
+        border-radius: 20px;
+      }
+
+      #menuPhoto {
+        max-height: 700px;
+      }
+
+      .menu-content {
+        padding: 32px;
+      }
+
+      .sub-title {
+        font-size: 21px;
+      }
+
+      .food-grid {
+        gap: 16px;
+      }
+
+      .food-item {
+        padding: 20px;
+      }
+
+      .food-label {
+        font-size: 15px;
+      }
+
+      .food-value {
+        font-size: 18px;
+      }
+
+      .warning {
+        padding: 22px;
+      }
+
+      .nutrition-section {
+        padding: 24px;
+      }
+
+      .nutrition-table th,
+      .nutrition-table td {
+        padding: 14px 18px;
+        font-size: 16px;
+      }
+
+      .nutrition-table tbody tr:first-child td:nth-child(2),
+      .nutrition-table tbody tr:first-child td:nth-child(3) {
+        font-size: 26px !important;
+      }
+
+      .weekly-menu {
+        padding: 24px;
+      }
+
+      .section-title {
+        font-size: 21px;
+      }
+
+      /* Tanggal Senin-Minggu tetap 7 hari dan bisa digeser */
       .week-nav {
         overflow-x: auto;
         overflow-y: hidden;
@@ -841,7 +953,30 @@
       }
 
       .week-nav .day-button {
-        flex: 0 0 150px;
+        flex: 0 0 180px;
+        width: 180px;
+        min-width: 180px;
+        height: 115px;
+      }
+
+      .day-button strong {
+        font-size: 16px;
+      }
+
+      .day-button span {
+        font-size: 36px;
+      }
+
+      footer {
+        padding: 34px 20px;
+      }
+
+      footer strong {
+        font-size: 17px;
+      }
+
+      footer span {
+        font-size: 14px;
       }
     }
 
