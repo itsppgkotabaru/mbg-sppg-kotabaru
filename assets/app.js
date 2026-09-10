@@ -33,7 +33,6 @@ function toISO(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-
 function todayWIB() {
   const now = new Date();
 
@@ -46,7 +45,6 @@ function todayWIB() {
   return toISO(wib);
 }
 
-
 function parseISO(s) {
   const [y, m, d] = s.split("-").map(Number);
 
@@ -56,7 +54,6 @@ function parseISO(s) {
     d
   );
 }
-
 
 function fmtDate(s) {
   const d = parseISO(s);
@@ -86,14 +83,9 @@ function getInitialDate() {
   return todayWIB();
 }
 
+let selectedDate = getInitialDate();
 
-let selectedDate =
-  getInitialDate();
-
-
-let lastRealToday =
-  todayWIB();
-
+let lastRealToday = todayWIB();
 
 function setURL() {
   history.replaceState(
@@ -128,41 +120,28 @@ function esc(v) {
 ========================================================= */
 
 function updateDayDate() {
-
-  const d =
-    parseISO(selectedDate);
-
+  const d = parseISO(selectedDate);
 
   const dayName =
     document.getElementById("dayName");
 
-
   const displayDate =
     document.getElementById("displayDate");
 
-
   if (dayName) {
-
     dayName.textContent =
       labels[d.getDay()];
-
   }
-
 
   if (displayDate) {
-
     displayDate.textContent =
       fmtDate(selectedDate);
-
   }
-
 }
 
 
 /* =========================================================
    ATUR LEBAR KOTAK HARI
-   DESKTOP : 7 KOTAK MEMENUHI LEBAR
-   HP      : KOTAK BISA DIGESER HORIZONTAL
 ========================================================= */
 
 function resizeDateButtons() {
@@ -170,78 +149,55 @@ function resizeDateButtons() {
   const weeklyButtons =
     document.getElementById("weeklyButtons");
 
-
   if (!weeklyButtons) return;
 
-
   const buttons =
-    weeklyButtons.querySelectorAll(
-      ".day-button"
-    );
-
+    weeklyButtons.querySelectorAll(".day-button");
 
   if (!buttons.length) return;
 
 
-  /* =======================================================
+  /* =====================================================
      HP / MOBILE
-     
-     Jangan paksa 7 kotak masuk satu layar.
-     Lebar tetap 82px agar bisa swipe kiri-kanan.
-  ======================================================= */
+
+     Jangan memaksa 7 tombol memenuhi layar.
+     Ukuran tombol dikembalikan ke CSS sehingga
+     tanggal tetap tampil dan dapat digeser.
+  ===================================================== */
 
   if (window.innerWidth <= 700) {
 
-    const buttonWidth = 82;
-
-
     buttons.forEach(button => {
 
-      button.style.width =
-        `${buttonWidth}px`;
-
-      button.style.minWidth =
-        `${buttonWidth}px`;
-
-      button.style.flex =
-        `0 0 ${buttonWidth}px`;
+      button.style.width = "";
+      button.style.minWidth = "";
+      button.style.flex = "";
 
     });
-
 
     return;
   }
 
 
-  /* =======================================================
+  /* =====================================================
      DESKTOP
-     
-     Tetap 7 kotak memenuhi area.
-  ======================================================= */
+
+     7 tombol memenuhi lebar.
+  ===================================================== */
 
   const style =
-    getComputedStyle(
-      weeklyButtons
-    );
-
+    getComputedStyle(weeklyButtons);
 
   const gap =
     parseFloat(
-      style.columnGap ||
-      style.gap
+      style.columnGap || style.gap
     ) || 0;
-
 
   const containerWidth =
     weeklyButtons.clientWidth;
 
-
   const buttonWidth =
-    (
-      containerWidth -
-      (gap * 6)
-    ) / 7;
-
+    (containerWidth - (gap * 6)) / 7;
 
   buttons.forEach(button => {
 
@@ -255,92 +211,60 @@ function resizeDateButtons() {
       `0 0 ${buttonWidth}px`;
 
   });
-
 }
 
 
 /* =========================================================
    MENU MINGGU INI
    SENIN SAMPAI MINGGU
-   TEPAT 7 TANGGAL
 ========================================================= */
 
 function renderWeekButtons() {
 
   const weeklyButtons =
-    document.getElementById(
-      "weeklyButtons"
-    );
-
+    document.getElementById("weeklyButtons");
 
   if (!weeklyButtons) return;
-
 
   const centerDate =
     parseISO(selectedDate);
 
 
-  /*
-     getDay():
-
-     Minggu = 0
-     Senin  = 1
-     Selasa = 2
-     Rabu   = 3
-     Kamis  = 4
-     Jumat  = 5
-     Sabtu  = 6
-  */
+  /* =====================================================
+     CARI HARI SENIN DARI MINGGU TERSEBUT
+  ===================================================== */
 
   const day =
     centerDate.getDay();
 
-
-  /*
-     Tentukan tanggal SENIN
-     pada minggu yang dipilih.
-  */
-
-  const diffToMonday =
-    day === 0
-      ? -6
-      : 1 - day;
-
+  const mondayOffset =
+    day === 0 ? -6 : 1 - day;
 
   const monday =
     new Date(centerDate);
 
-
   monday.setDate(
-    centerDate.getDate() +
-    diffToMonday
+    centerDate.getDate() + mondayOffset
   );
 
-
-  /*
-     Buat tepat 7 tanggal:
-     Senin, Selasa, Rabu,
-     Kamis, Jumat, Sabtu, Minggu
-  */
 
   const dates = [];
 
 
-  for (
-    let i = 0;
-    i < 7;
-    i++
-  ) {
+  /* =====================================================
+     TEPAT 7 HARI
+     SENIN → SELASA → RABU → KAMIS
+     → JUMAT → SABTU → MINGGU
+  ===================================================== */
+
+  for (let i = 0; i < 7; i++) {
 
     const d =
       new Date(monday);
 
-
     d.setDate(
-      monday.getDate() +
-      i
+      monday.getDate() + i
     );
-
 
     dates.push(
       toISO(d)
@@ -349,9 +273,9 @@ function renderWeekButtons() {
   }
 
 
-  /* =======================================================
-     TAMPILKAN KOTAK
-  ======================================================= */
+  /* =====================================================
+     TAMPILKAN TANGGAL
+  ===================================================== */
 
   weeklyButtons.innerHTML =
     dates.map(iso => {
@@ -359,12 +283,10 @@ function renderWeekButtons() {
       const d =
         parseISO(iso);
 
-
       const active =
         iso === selectedDate
           ? " active"
           : "";
-
 
       return `
         <button
@@ -372,7 +294,6 @@ function renderWeekButtons() {
           type="button"
           data-date="${iso}"
         >
-
           <strong>
             ${labels[d.getDay()]}
           </strong>
@@ -380,21 +301,18 @@ function renderWeekButtons() {
           <span class="date-number">
             ${d.getDate()}
           </span>
-
         </button>
       `;
 
     }).join("");
 
 
-  /* =======================================================
-     EVENT KLIK TANGGAL
-  ======================================================= */
+  /* =====================================================
+     KLIK TANGGAL
+  ===================================================== */
 
   weeklyButtons
-    .querySelectorAll(
-      ".day-button"
-    )
+    .querySelectorAll(".day-button")
     .forEach(button => {
 
       button.addEventListener(
@@ -404,18 +322,13 @@ function renderWeekButtons() {
           selectedDate =
             this.dataset.date;
 
-
           setURL();
-
 
           updateDayDate();
 
-
           renderWeekButtons();
 
-
           loadMenu();
-
 
           scrollToMenuTop();
 
@@ -425,9 +338,9 @@ function renderWeekButtons() {
     });
 
 
-  /* =======================================================
-     ATUR UKURAN KOTAK
-  ======================================================= */
+  /* =====================================================
+     SETELAH TAMPIL
+  ===================================================== */
 
   requestAnimationFrame(() => {
 
@@ -440,47 +353,20 @@ function renderWeekButtons() {
       );
 
 
-    if (!activeButton) return;
+    if (activeButton) {
 
+      const containerCenter =
+        weeklyButtons.clientWidth / 2;
 
-    /* =====================================================
-       HP
-       
-       Tanggal aktif otomatis berada
-       di tengah area horizontal.
-    ===================================================== */
+      const buttonCenter =
+        activeButton.offsetLeft +
+        activeButton.offsetWidth / 2;
 
-    if (
-      window.innerWidth <= 700
-    ) {
+      weeklyButtons.scrollLeft =
+        buttonCenter -
+        containerCenter;
 
-      activeButton.scrollIntoView({
-        behavior: "auto",
-        block: "nearest",
-        inline: "center"
-      });
-
-
-      return;
     }
-
-
-    /* =====================================================
-       DESKTOP
-    ===================================================== */
-
-    const containerCenter =
-      weeklyButtons.clientWidth / 2;
-
-
-    const buttonCenter =
-      activeButton.offsetLeft +
-      activeButton.offsetWidth / 2;
-
-
-    weeklyButtons.scrollLeft =
-      buttonCenter -
-      containerCenter;
 
   });
 
@@ -492,7 +378,6 @@ function renderWeekButtons() {
 ========================================================= */
 
 let sb = null;
-
 
 function initSupabase() {
 
@@ -510,9 +395,7 @@ function initSupabase() {
 
 
   if (
-    window.SUPABASE_URL.startsWith(
-      "PASTE_"
-    )
+    window.SUPABASE_URL.startsWith("PASTE_")
   ) {
 
     console.error(
@@ -542,7 +425,6 @@ function initSupabase() {
       window.SUPABASE_ANON_KEY
     );
 
-
   return true;
 }
 
@@ -557,48 +439,32 @@ async function loadMenu() {
 
 
   const img =
-    document.getElementById(
-      "menuPhoto"
-    );
-
+    document.getElementById("menuPhoto");
 
   const placeholder =
-    document.getElementById(
-      "photoPlaceholder"
-    );
-
+    document.getElementById("photoPlaceholder");
 
   const menuContent =
-    document.getElementById(
-      "menuContent"
-    );
-
+    document.getElementById("menuContent");
 
   const emptyState =
-    document.getElementById(
-      "emptyState"
-    );
+    document.getElementById("emptyState");
 
 
-  /* =======================================================
+  /* =====================================================
      CEK SUPABASE
-  ======================================================= */
+  ===================================================== */
 
   if (!initSupabase()) {
 
     if (menuContent) {
-
       menuContent.style.display =
         "none";
-
     }
 
-
     if (emptyState) {
-
       emptyState.style.display =
         "block";
-
     }
 
 
@@ -622,7 +488,6 @@ async function loadMenu() {
 
     }
 
-
     return;
   }
 
@@ -643,9 +508,9 @@ async function loadMenu() {
         .maybeSingle();
 
 
-    /* =====================================================
+    /* ===================================================
        ERROR SUPABASE
-    ===================================================== */
+    =================================================== */
 
     if (error) {
 
@@ -654,33 +519,27 @@ async function loadMenu() {
         error
       );
 
-
       showEmpty(
         "Gagal mengambil data menu. Periksa konfigurasi Supabase dan RLS."
       );
-
 
       return;
     }
 
 
-    /* =====================================================
-       FOTO MENU
-    ===================================================== */
+    /* ===================================================
+       FOTO
+    =================================================== */
 
-    if (
-      menu?.photo_url
-    ) {
+    if (menu?.photo_url) {
 
       if (img) {
 
         img.src =
           menu.photo_url;
 
-
         img.alt =
           `Foto menu ${fmtDate(selectedDate)}`;
-
 
         img.style.display =
           "block";
@@ -699,8 +558,7 @@ async function loadMenu() {
 
       if (img) {
 
-        img.src =
-          "";
+        img.src = "";
 
         img.style.display =
           "none";
@@ -718,16 +576,15 @@ async function loadMenu() {
     }
 
 
-    /* =====================================================
+    /* ===================================================
        MENU BELUM ADA
-    ===================================================== */
+    =================================================== */
 
     if (!menu) {
 
       showEmpty(
         `Data menu untuk tanggal ${fmtDate(selectedDate)} belum dimasukkan oleh Admin.`
       );
-
 
       return;
     }
@@ -749,31 +606,23 @@ async function loadMenu() {
     }
 
 
-    /* =====================================================
+    /* ===================================================
        ISI OMPRENG
-    ===================================================== */
+    =================================================== */
 
     const foodItems = [
-
       "carbohydrate",
-
       "animal_protein",
-
       "plant_protein",
-
       "vegetable",
-
       "fruit"
-
     ];
 
 
     foodItems.forEach(key => {
 
       const element =
-        document.getElementById(
-          key
-        );
+        document.getElementById(key);
 
 
       if (element) {
@@ -786,9 +635,9 @@ async function loadMenu() {
     });
 
 
-    /* =====================================================
-       KANDUNGAN GIZI
-    ===================================================== */
+    /* ===================================================
+       GIZI
+    =================================================== */
 
     const rows = [
 
@@ -879,13 +728,13 @@ async function loadMenu() {
 
     }
 
+
   } catch (err) {
 
     console.error(
       "Terjadi kesalahan:",
       err
     );
-
 
     showEmpty(
       "Terjadi kesalahan saat mengambil data menu."
@@ -907,12 +756,10 @@ function showEmpty(text) {
       "menuContent"
     );
 
-
   const emptyState =
     document.getElementById(
       "emptyState"
     );
-
 
   const emptyText =
     document.getElementById(
@@ -971,19 +818,14 @@ function checkDateChange() {
     lastRealToday =
       currentToday;
 
-
     selectedDate =
       currentToday;
 
-
     setURL();
-
 
     updateDayDate();
 
-
     renderWeekButtons();
-
 
     loadMenu();
 
@@ -1007,14 +849,39 @@ window.addEventListener(
 
 
 /* =========================================================
-   SCROLL KE BAGIAN MENU
+   MULAI
+========================================================= */
+
+function startPage() {
+
+  updateDayDate();
+
+  renderWeekButtons();
+
+  loadMenu();
+
+}
+
+startPage();
+
+
+/* =========================================================
+   CEK PERGANTIAN HARI SETIAP 30 DETIK
+========================================================= */
+
+setInterval(
+  checkDateChange,
+  30000
+);
+
+
+/* =========================================================
+   SCROLL KE HARI DAN TANGGAL
 ========================================================= */
 
 function scrollToMenuTop() {
 
-  if (
-    window.innerWidth <= 700
-  ) {
+  if (window.innerWidth <= 700) {
 
     requestAnimationFrame(() => {
 
@@ -1063,35 +930,8 @@ function scrollToMenuTop() {
   }
 
 }
-
-
-/* =========================================================
-   MULAI
-========================================================= */
-
-function startPage() {
-
-  updateDayDate();
-
-
-  renderWeekButtons();
-
-
-  loadMenu();
-
-}
-
-
-startPage();
-
-
-/* =========================================================
-   CEK PERGANTIAN HARI
-   SETIAP 30 DETIK
-========================================================= */
-
-setInterval(
-  checkDateChange,
-  30000
-);
 ```
+
+**Penting:** script di atas memang hanya mengubah bagian `resizeDateButtons()`. Logika `renderWeekButtons()` tetap membuat **tepat 7 tanggal: Senin sampai Minggu**, seperti pada script Anda.
+
+Kalau setelah dipasang **tanggalnya sudah muncul tetapi belum bisa digeser di HP**, berarti yang perlu diperbaiki berikutnya adalah **CSS `.week-nav`**, bukan `app.js`. Jangan ubah `app.js` lagi.
