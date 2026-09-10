@@ -1,3 +1,4 @@
+```javascript
 const labels = {
   0: "Minggu",
   1: "Senin",
@@ -32,6 +33,7 @@ function toISO(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
+
 function todayWIB() {
   const now = new Date();
 
@@ -44,6 +46,7 @@ function todayWIB() {
   return toISO(wib);
 }
 
+
 function parseISO(s) {
   const [y, m, d] = s.split("-").map(Number);
 
@@ -53,6 +56,7 @@ function parseISO(s) {
     d
   );
 }
+
 
 function fmtDate(s) {
   const d = parseISO(s);
@@ -82,9 +86,14 @@ function getInitialDate() {
   return todayWIB();
 }
 
-let selectedDate = getInitialDate();
 
-let lastRealToday = todayWIB();
+let selectedDate =
+  getInitialDate();
+
+
+let lastRealToday =
+  todayWIB();
+
 
 function setURL() {
   history.replaceState(
@@ -119,59 +128,123 @@ function esc(v) {
 ========================================================= */
 
 function updateDayDate() {
-  const d = parseISO(selectedDate);
+
+  const d =
+    parseISO(selectedDate);
+
 
   const dayName =
     document.getElementById("dayName");
 
+
   const displayDate =
     document.getElementById("displayDate");
 
+
   if (dayName) {
+
     dayName.textContent =
       labels[d.getDay()];
+
   }
 
+
   if (displayDate) {
+
     displayDate.textContent =
       fmtDate(selectedDate);
+
   }
+
 }
 
 
 /* =========================================================
    ATUR LEBAR KOTAK HARI
-   7 KOTAK SENIN - MINGGU
+   DESKTOP : 7 KOTAK MEMENUHI LEBAR
+   HP      : KOTAK BISA DIGESER HORIZONTAL
 ========================================================= */
 
 function resizeDateButtons() {
+
   const weeklyButtons =
     document.getElementById("weeklyButtons");
 
+
   if (!weeklyButtons) return;
 
+
   const buttons =
-    weeklyButtons.querySelectorAll(".day-button");
+    weeklyButtons.querySelectorAll(
+      ".day-button"
+    );
+
 
   if (!buttons.length) return;
 
+
+  /* =======================================================
+     HP / MOBILE
+     
+     Jangan paksa 7 kotak masuk satu layar.
+     Lebar tetap 82px agar bisa swipe kiri-kanan.
+  ======================================================= */
+
+  if (window.innerWidth <= 700) {
+
+    const buttonWidth = 82;
+
+
+    buttons.forEach(button => {
+
+      button.style.width =
+        `${buttonWidth}px`;
+
+      button.style.minWidth =
+        `${buttonWidth}px`;
+
+      button.style.flex =
+        `0 0 ${buttonWidth}px`;
+
+    });
+
+
+    return;
+  }
+
+
+  /* =======================================================
+     DESKTOP
+     
+     Tetap 7 kotak memenuhi area.
+  ======================================================= */
+
   const style =
-    getComputedStyle(weeklyButtons);
+    getComputedStyle(
+      weeklyButtons
+    );
+
 
   const gap =
-    parseFloat(style.columnGap || style.gap) || 0;
+    parseFloat(
+      style.columnGap ||
+      style.gap
+    ) || 0;
+
 
   const containerWidth =
     weeklyButtons.clientWidth;
 
-  /*
-     7 kotak + 6 celah
-  */
 
   const buttonWidth =
-    (containerWidth - (gap * 6)) / 7;
+    (
+      containerWidth -
+      (gap * 6)
+    ) / 7;
+
 
   buttons.forEach(button => {
+
     button.style.width =
       `${buttonWidth}px`;
 
@@ -180,68 +253,118 @@ function resizeDateButtons() {
 
     button.style.flex =
       `0 0 ${buttonWidth}px`;
+
   });
+
 }
 
 
 /* =========================================================
-   TANGGAL BERJALAN TERUS
-   BANYAK TANGGAL
-   YANG TERLIHAT HANYA 7 KOTAK
+   MENU MINGGU INI
+   SENIN SAMPAI MINGGU
+   TEPAT 7 TANGGAL
 ========================================================= */
 
 function renderWeekButtons() {
+
   const weeklyButtons =
-    document.getElementById("weeklyButtons");
+    document.getElementById(
+      "weeklyButtons"
+    );
+
 
   if (!weeklyButtons) return;
+
 
   const centerDate =
     parseISO(selectedDate);
 
+
   /*
-     MENU MINGGU INI = SENIN SAMPAI MINGGU
-     Tepat 7 tanggal berdasarkan minggu dari selectedDate.
+     getDay():
+
+     Minggu = 0
+     Senin  = 1
+     Selasa = 2
+     Rabu   = 3
+     Kamis  = 4
+     Jumat  = 5
+     Sabtu  = 6
   */
 
-  const day = centerDate.getDay(); // Minggu=0, Senin=1, ..., Sabtu=6
+  const day =
+    centerDate.getDay();
 
-  // Menentukan tanggal Senin pada minggu yang sedang dipilih
+
+  /*
+     Tentukan tanggal SENIN
+     pada minggu yang dipilih.
+  */
+
   const diffToMonday =
-    day === 0 ? -6 : 1 - day;
+    day === 0
+      ? -6
+      : 1 - day;
+
 
   const monday =
     new Date(centerDate);
 
+
   monday.setDate(
-    centerDate.getDate() + diffToMonday
+    centerDate.getDate() +
+    diffToMonday
   );
+
+
+  /*
+     Buat tepat 7 tanggal:
+     Senin, Selasa, Rabu,
+     Kamis, Jumat, Sabtu, Minggu
+  */
 
   const dates = [];
 
-  // Senin sampai Minggu = 7 hari
-  for (let i = 0; i < 7; i++) {
+
+  for (
+    let i = 0;
+    i < 7;
+    i++
+  ) {
+
     const d =
       new Date(monday);
 
+
     d.setDate(
-      monday.getDate() + i
+      monday.getDate() +
+      i
     );
+
 
     dates.push(
       toISO(d)
     );
+
   }
+
+
+  /* =======================================================
+     TAMPILKAN KOTAK
+  ======================================================= */
 
   weeklyButtons.innerHTML =
     dates.map(iso => {
+
       const d =
         parseISO(iso);
+
 
       const active =
         iso === selectedDate
           ? " active"
           : "";
+
 
       return `
         <button
@@ -249,6 +372,7 @@ function renderWeekButtons() {
           type="button"
           data-date="${iso}"
         >
+
           <strong>
             ${labels[d.getDay()]}
           </strong>
@@ -256,16 +380,21 @@ function renderWeekButtons() {
           <span class="date-number">
             ${d.getDate()}
           </span>
+
         </button>
       `;
+
     }).join("");
 
-  /*
-     Klik tanggal
-  */
+
+  /* =======================================================
+     EVENT KLIK TANGGAL
+  ======================================================= */
 
   weeklyButtons
-    .querySelectorAll(".day-button")
+    .querySelectorAll(
+      ".day-button"
+    )
     .forEach(button => {
 
       button.addEventListener(
@@ -275,55 +404,95 @@ function renderWeekButtons() {
           selectedDate =
             this.dataset.date;
 
+
           setURL();
+
 
           updateDayDate();
 
+
           renderWeekButtons();
+
 
           loadMenu();
 
+
           scrollToMenuTop();
+
         }
       );
 
     });
 
-  /*
-     Atur ukuran kotak.
-     Tidak mengubah CSS atau aturan tampilan HP.
-  */
+
+  /* =======================================================
+     ATUR UKURAN KOTAK
+  ======================================================= */
 
   requestAnimationFrame(() => {
 
     resizeDateButtons();
+
 
     const activeButton =
       weeklyButtons.querySelector(
         ".day-button.active"
       );
 
-    if (activeButton) {
 
-      const containerCenter =
-        weeklyButtons.clientWidth / 2;
+    if (!activeButton) return;
 
-      const buttonCenter =
-        activeButton.offsetLeft +
-        activeButton.offsetWidth / 2;
 
-      weeklyButtons.scrollLeft =
-        buttonCenter - containerCenter;
+    /* =====================================================
+       HP
+       
+       Tanggal aktif otomatis berada
+       di tengah area horizontal.
+    ===================================================== */
 
+    if (
+      window.innerWidth <= 700
+    ) {
+
+      activeButton.scrollIntoView({
+        behavior: "auto",
+        block: "nearest",
+        inline: "center"
+      });
+
+
+      return;
     }
 
+
+    /* =====================================================
+       DESKTOP
+    ===================================================== */
+
+    const containerCenter =
+      weeklyButtons.clientWidth / 2;
+
+
+    const buttonCenter =
+      activeButton.offsetLeft +
+      activeButton.offsetWidth / 2;
+
+
+    weeklyButtons.scrollLeft =
+      buttonCenter -
+      containerCenter;
+
   });
+
 }
+
+
 /* =========================================================
    SUPABASE
 ========================================================= */
 
 let sb = null;
+
 
 function initSupabase() {
 
@@ -339,8 +508,11 @@ function initSupabase() {
     return false;
   }
 
+
   if (
-    window.SUPABASE_URL.startsWith("PASTE_")
+    window.SUPABASE_URL.startsWith(
+      "PASTE_"
+    )
   ) {
 
     console.error(
@@ -349,6 +521,7 @@ function initSupabase() {
 
     return false;
   }
+
 
   if (
     !window.supabase ||
@@ -362,11 +535,13 @@ function initSupabase() {
     return false;
   }
 
+
   sb =
     window.supabase.createClient(
       window.SUPABASE_URL,
       window.SUPABASE_ANON_KEY
     );
+
 
   return true;
 }
@@ -380,31 +555,58 @@ async function loadMenu() {
 
   updateDayDate();
 
+
   const img =
-    document.getElementById("menuPhoto");
+    document.getElementById(
+      "menuPhoto"
+    );
+
 
   const placeholder =
-    document.getElementById("photoPlaceholder");
+    document.getElementById(
+      "photoPlaceholder"
+    );
+
 
   const menuContent =
-    document.getElementById("menuContent");
+    document.getElementById(
+      "menuContent"
+    );
+
 
   const emptyState =
-    document.getElementById("emptyState");
+    document.getElementById(
+      "emptyState"
+    );
 
+
+  /* =======================================================
+     CEK SUPABASE
+  ======================================================= */
 
   if (!initSupabase()) {
 
     if (menuContent) {
-      menuContent.style.display = "none";
+
+      menuContent.style.display =
+        "none";
+
     }
+
 
     if (emptyState) {
-      emptyState.style.display = "block";
+
+      emptyState.style.display =
+        "block";
+
     }
 
+
     const emptyText =
-      document.getElementById("emptyText");
+      document.getElementById(
+        "emptyText"
+      );
+
 
     if (emptyText) {
 
@@ -412,10 +614,14 @@ async function loadMenu() {
         <strong>
           📋 MENU BELUM TERSEDIA
         </strong>
+
         <br>
+
         Konfigurasi Supabase belum tersedia.
       `;
+
     }
+
 
     return;
   }
@@ -437,6 +643,10 @@ async function loadMenu() {
         .maybeSingle();
 
 
+    /* =====================================================
+       ERROR SUPABASE
+    ===================================================== */
+
     if (error) {
 
       console.error(
@@ -444,52 +654,67 @@ async function loadMenu() {
         error
       );
 
+
       showEmpty(
         "Gagal mengambil data menu. Periksa konfigurasi Supabase dan RLS."
       );
+
 
       return;
     }
 
 
     /* =====================================================
-       FOTO
+       FOTO MENU
     ===================================================== */
 
-    if (menu?.photo_url) {
+    if (
+      menu?.photo_url
+    ) {
 
       if (img) {
 
         img.src =
           menu.photo_url;
 
+
         img.alt =
           `Foto menu ${fmtDate(selectedDate)}`;
 
+
         img.style.display =
           "block";
+
       }
 
+
       if (placeholder) {
+
         placeholder.style.display =
           "none";
+
       }
 
     } else {
 
       if (img) {
 
-        img.src = "";
+        img.src =
+          "";
 
         img.style.display =
           "none";
+
       }
+
 
       if (placeholder) {
 
         placeholder.style.display =
           "flex";
+
       }
+
     }
 
 
@@ -503,18 +728,24 @@ async function loadMenu() {
         `Data menu untuk tanggal ${fmtDate(selectedDate)} belum dimasukkan oleh Admin.`
       );
 
+
       return;
     }
 
 
     if (emptyState) {
+
       emptyState.style.display =
         "none";
+
     }
 
+
     if (menuContent) {
+
       menuContent.style.display =
         "block";
+
     }
 
 
@@ -523,29 +754,40 @@ async function loadMenu() {
     ===================================================== */
 
     const foodItems = [
+
       "carbohydrate",
+
       "animal_protein",
+
       "plant_protein",
+
       "vegetable",
+
       "fruit"
+
     ];
+
 
     foodItems.forEach(key => {
 
       const element =
-        document.getElementById(key);
+        document.getElementById(
+          key
+        );
+
 
       if (element) {
 
         element.textContent =
           menu[key] || "-";
+
       }
 
     });
 
 
     /* =====================================================
-       GIZI
+       KANDUNGAN GIZI
     ===================================================== */
 
     const rows = [
@@ -603,6 +845,7 @@ async function loadMenu() {
             <tr>
 
               <td>
+
                 <strong>
                   ${esc(row[0])}
                 </strong>
@@ -612,13 +855,16 @@ async function loadMenu() {
                 <small>
                   (${esc(row[1])})
                 </small>
+
               </td>
+
 
               <td>
                 ${esc(
                   menu[row[2]] ?? "-"
                 )}
               </td>
+
 
               <td>
                 ${esc(
@@ -630,6 +876,7 @@ async function loadMenu() {
           `;
 
         }).join("");
+
     }
 
   } catch (err) {
@@ -639,10 +886,13 @@ async function loadMenu() {
       err
     );
 
+
     showEmpty(
       "Terjadi kesalahan saat mengambil data menu."
     );
+
   }
+
 }
 
 
@@ -657,10 +907,12 @@ function showEmpty(text) {
       "menuContent"
     );
 
+
   const emptyState =
     document.getElementById(
       "emptyState"
     );
+
 
   const emptyText =
     document.getElementById(
@@ -669,14 +921,20 @@ function showEmpty(text) {
 
 
   if (menuContent) {
+
     menuContent.style.display =
       "none";
+
   }
 
+
   if (emptyState) {
+
     emptyState.style.display =
       "block";
+
   }
+
 
   if (emptyText) {
 
@@ -689,7 +947,9 @@ function showEmpty(text) {
 
       ${esc(text)}
     `;
+
   }
+
 }
 
 
@@ -702,6 +962,7 @@ function checkDateChange() {
   const currentToday =
     todayWIB();
 
+
   if (
     currentToday !==
     lastRealToday
@@ -710,17 +971,24 @@ function checkDateChange() {
     lastRealToday =
       currentToday;
 
+
     selectedDate =
       currentToday;
 
+
     setURL();
+
 
     updateDayDate();
 
+
     renderWeekButtons();
 
+
     loadMenu();
+
   }
+
 }
 
 
@@ -739,6 +1007,65 @@ window.addEventListener(
 
 
 /* =========================================================
+   SCROLL KE BAGIAN MENU
+========================================================= */
+
+function scrollToMenuTop() {
+
+  if (
+    window.innerWidth <= 700
+  ) {
+
+    requestAnimationFrame(() => {
+
+      const dayDateHeader =
+        document.querySelector(
+          ".day-date-header"
+        );
+
+
+      if (!dayDateHeader) return;
+
+
+      const header =
+        document.querySelector(
+          "header"
+        );
+
+
+      const headerHeight =
+        header
+          ? header.offsetHeight
+          : 0;
+
+
+      const target =
+        dayDateHeader.getBoundingClientRect().top +
+        window.pageYOffset -
+        headerHeight;
+
+
+      window.scrollTo({
+
+        top:
+          Math.max(
+            0,
+            target
+          ),
+
+        behavior:
+          "smooth"
+
+      });
+
+    });
+
+  }
+
+}
+
+
+/* =========================================================
    MULAI
 ========================================================= */
 
@@ -746,52 +1073,25 @@ function startPage() {
 
   updateDayDate();
 
+
   renderWeekButtons();
 
+
   loadMenu();
+
 }
+
 
 startPage();
 
 
 /* =========================================================
-   CEK PERGANTIAN HARI SETIAP 30 DETIK
+   CEK PERGANTIAN HARI
+   SETIAP 30 DETIK
 ========================================================= */
 
 setInterval(
   checkDateChange,
   30000
 );
-
-/* =========================================================
-   RESIZE LAYAR
-========================================================= */
-
-function scrollToMenuTop() {
-  if (window.innerWidth <= 700) {
-    requestAnimationFrame(() => {
-
-      const dayDateHeader =
-        document.querySelector(".day-date-header");
-
-      if (!dayDateHeader) return;
-
-      const header =
-        document.querySelector("header");
-
-      const headerHeight =
-        header ? header.offsetHeight : 0;
-
-      const target =
-        dayDateHeader.getBoundingClientRect().top +
-        window.pageYOffset -
-        headerHeight;
-
-      window.scrollTo({
-        top: Math.max(0, target),
-        behavior: "smooth"
-      });
-
-    });
-  }
-}
+```
