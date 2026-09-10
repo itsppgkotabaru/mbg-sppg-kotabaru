@@ -51,7 +51,8 @@
     }
 
     .header-inner {
-      max-width: 1100px;
+      max-width: 1400px;
+      width: 100%;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -164,7 +165,8 @@
     ========================================================= */
 
     .day-date-header {
-      max-width: 1100px;
+      max-width: 1400px;
+      width: 100%;
       margin: 18px auto 16px;
       padding: 0 16px 12px;
       text-align: center;
@@ -193,9 +195,10 @@
     ========================================================= */
 
     main {
-      max-width: 1100px;
+      max-width: 1400px;
+      width: 100%;
       margin: 28px auto 50px;
-      padding: 0 16px;
+      padding: 0 24px;
     }
 
 
@@ -224,7 +227,7 @@
 
     #menuPhoto {
       width: 100%;
-      max-height: 430px;
+      max-height: 600px;
       object-fit: cover;
       display: none;
     }
@@ -808,6 +811,38 @@
         font-size: 25px;
       }
 
+    }
+
+    /* =========================================================
+       DESKTOP / LAPTOP
+       Hanya memperlebar area tampilan.
+       Tampilan HP tetap mengikuti @media max-width: 700px di atas.
+    ========================================================= */
+
+    @media (min-width: 701px) {
+      .header-inner,
+      .day-date-header,
+      main {
+        max-width: 1400px;
+      }
+
+      /* Tanggal mingguan bisa digeser di komputer/laptop */
+      .week-nav {
+        overflow-x: auto;
+        overflow-y: hidden;
+        cursor: grab;
+        scrollbar-width: thin;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .week-nav:active {
+        cursor: grabbing;
+      }
+
+      .week-nav .day-button {
+        flex: 0 0 150px;
+      }
     }
 
   </style>
