@@ -34,51 +34,51 @@
       line-height: 1.6;
     }
 
-
-    /* =========================================================
-       HEADER
-    ========================================================= */
-
 /* =========================================================
    HEADER
 ========================================================= */
 
-header {
+.site-header {
   background: linear-gradient(
     135deg,
     #163f91,
     #2056b3
   );
+
   color: white;
-  padding: 18px 20px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
+  padding: 18px 25px;
 }
 
 .header-inner {
   max-width: 1100px;
   margin: 0 auto;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   min-height: 100px;
 }
 
 
 /* =========================================================
-   TIGA LOGO
+   LOGO
 ========================================================= */
 
 .header-logos {
   display: flex;
   align-items: center;
   justify-content: center;
+
   gap: 12px;
+
   flex-shrink: 0;
 }
 
 .header-logo {
   width: 68px;
   height: 68px;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,7 +87,9 @@ header {
 .header-logo img {
   width: 100%;
   height: 100%;
+
   object-fit: contain;
+
   display: block;
 }
 
@@ -99,36 +101,46 @@ header {
 .header-divider {
   width: 3px;
   height: 70px;
+
   background: #ffb000;
+
   margin: 0 22px;
+
   border-radius: 3px;
+
   flex-shrink: 0;
 }
 
 
 /* =========================================================
-   TEKS HEADER
+   TEKS SPPG
 ========================================================= */
 
 .header-text {
   text-align: left;
+
   min-width: 0;
 }
 
-.header-text h2 {
-  margin: 0;
+.sppg-title {
   color: #ffffff;
+
   font-size: 25px;
   font-weight: 900;
+
   line-height: 1.15;
-  letter-spacing: .3px;
+
+  letter-spacing: 0.3px;
 }
 
-.header-text p {
-  margin: 6px 0 0;
+.foundation-title {
+  margin-top: 6px;
+
   color: #ffffff;
+
   font-size: 15px;
   font-weight: 500;
+
   line-height: 1.2;
 }
 
@@ -750,37 +762,44 @@ header {
        HEADER
   ====================================================== -->
 
-  <header>
+  <header class="site-header">
 
-    <div class="header-inner">
+  <div class="header-inner">
 
-      <div class="logo">
-        <img
-          src="assets/logo-bgn.png"
-          alt="Logo Badan Gizi Nasional"
-        >
+    <!-- KELOMPOK LOGO -->
+    <div class="header-logos">
+
+      <div class="header-logo logo-bgn">
+        <img src="assets/logo-bgn.png" alt="Logo BGN">
       </div>
 
-      <div class="header-text">
+      <div class="header-logo logo-slhs">
+        <img src="assets/logo-slhs.png" alt="Logo SLHS">
+      </div>
 
-        <h1>
-          MAKAN BERGIZI GRATIS
-        </h1>
-
-        <h2>
-          SPPG POLRES BREBES KOTABARU
-        </h2>
-
-        <p>
-          Yayasan Kemala Bhayangkari
-        </p>
-
+      <div class="header-logo logo-halal">
+        <img src="assets/logo-halal.png" alt="Logo Halal">
       </div>
 
     </div>
 
-  </header>
+    <!-- GARIS PEMISAH -->
+    <div class="header-divider"></div>
 
+    <!-- NAMA SPPG -->
+    <div class="header-text">
+      <div class="sppg-title">
+        SPPG POLRES BREBES KOTABARU
+      </div>
+
+      <div class="foundation-title">
+        Yayasan Kemala Bhayangkari
+      </div>
+    </div>
+
+  </div>
+
+</header>
 
   <!-- =====================================================
        HARI DAN TANGGAL
