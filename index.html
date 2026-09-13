@@ -64,21 +64,17 @@
 /* =========================================================
    LOGO
 ========================================================= */
-
 .header-logos {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  gap: 12px;
-
+  gap: 10px;
   flex-shrink: 0;
 }
 
 .header-logo {
   width: 68px;
   height: 68px;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,12 +83,8 @@
 .header-logo img {
   width: 100%;
   height: 100%;
-
   object-fit: contain;
-
-  display: block;
 }
-
 
 /* =========================================================
    GARIS PEMISAH
@@ -617,19 +609,17 @@
   }
 
   /* 3 LOGO DI ATAS */
-  .header-logos {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
+ .header-logos {
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+  align-items: center;
+}
 
-  .header-logo {
-    width: 60px;
-    height: 60px;
-  }
-
+.header-logo {
+  width: 54px;
+  height: 54px;
+}
   /* GARIS PEMISAH DIHILANGKAN DI HP */
   .header-divider {
     display: none;
@@ -816,22 +806,26 @@
 
     <div class="header-inner">
       
-    <!-- KELOMPOK LOGO -->
-    <div class="header-logos">
+   <!-- KELOMPOK LOGO -->
+<div class="header-logos">
 
-      <div class="header-logo logo-bgn">
-        <img src="assets/logo-bgn.png" alt="Logo BGN">
-      </div>
+  <div class="header-logo logo-bgn">
+    <img src="assets/logo-bgn.png" alt="Logo BGN">
+  </div>
 
-      <div class="header-logo logo-slhs">
-        <img src="assets/logo-slhs.png" alt="Logo SLHS">
-      </div>
+  <div class="header-logo logo-polri">
+    <img src="assets/logo-polri.png" alt="Logo POLRI">
+  </div>
 
-      <div class="header-logo logo-halal">
-        <img src="assets/logo-halal.png" alt="Logo Halal">
-      </div>
+  <div class="header-logo logo-slhs">
+    <img src="assets/logo-slhs.png" alt="Logo SLHS">
+  </div>
 
-    </div>
+  <div class="header-logo logo-halal">
+    <img src="assets/logo-halal.png" alt="Logo Halal">
+  </div>
+
+</div>
 
     <!-- GARIS PEMISAH -->
     <div class="header-divider"></div>
